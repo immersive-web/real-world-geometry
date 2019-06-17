@@ -15,7 +15,7 @@ Application could be informed of the removal / tracking loss of a plane object b
 
 - On XRPlane:
 
-```java
+```webidl
 partial interface XRPlane {
  // Invoked when a plane is no longer being tracked.
  attribute EventHandler onremoved;
@@ -33,7 +33,7 @@ plane.addEventListener('onremoved', (event) => {
 
 - On XRWorldInformation:
 
-```java
+```webidl
 partial interface XRWorldInformation {
  // Invoked when a plane is no longer being tracked.
  attribute EventHandler onplaneremoved;
@@ -48,7 +48,7 @@ With event-based approach, user agent needs to guarantee that all plane removal 
 ## Promise-based approach
 This approach is similar to the event-based approach. The difference is that application could be notified about plane removal by attaching a continuation to the promise returned by XRPlane object:
 
-```java
+```webidl
 partial interface XRPlane {
  // Resolved when a plane is no longer being tracked.
  attribute Promise removed;
@@ -57,10 +57,12 @@ partial interface XRPlane {
 
 The usage of the promise is as follows:
 
+```javascript
 let plane = ...; // Plane obtained from XRFrame's XRWorldInformation.
 plane.removed.then(() => {
    console.log("Plane removed.", plane);
 });
+```
 
 The application will likely attach a continuation to the promise every time a new plane gets detected.
 
@@ -72,7 +74,7 @@ It’s worth noting that unlike in event-based approach, adding a promise to `XR
 ## Attribute-based approach
 In this approach, the `XRWorldInformation` interface will be extended with attributes that convey information about the planes that used to be present in previous frame but are no longer present in current frame.
 
-```java
+```webidl
 partial interface XRWorldInformation {
  // (existing attribute) Array with planes detected in current frame.
  readonly attribute FrozenArray<XRPlane>? detectedPlanes;
