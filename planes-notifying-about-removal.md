@@ -75,12 +75,16 @@ It’s worth noting that unlike in event-based approach, adding a promise to `XR
 In this approach, the `XRWorldInformation` interface will be extended with attributes that convey information about the planes that used to be present in previous frame but are no longer present in current frame.
 
 ```webidl
+interface XRPlaneSet {
+  readonly setlike<XRPlane>;
+}
+
 partial interface XRWorldInformation {
- // (existing attribute) Array with planes detected in current frame.
- readonly attribute FrozenArray<XRPlane>? detectedPlanes;
- // (new attribute) Array with planes that were detected in previous frame
+ // (existing attribute) Set with planes detected in current frame.
+ readonly attribute XRPlaneSet? detectedPlanes;
+ // (new attribute) Set with planes that were detected in previous frame
  // but are no longer detected in current frame.
- readonly attribute FrozenArray<XRPlane>? removedPlanes;
+ readonly attribute XRPlaneSet? removedPlanes;
 }
 ```
 
