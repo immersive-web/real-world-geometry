@@ -41,7 +41,7 @@ let xrReferenceSpace = ...; // XRReferenceSpace retrieved from successful
 function onXRFrame(timestamp, frame) {
  let detectedPlanes = frame.worldInformation.detectedPlanes;
  detectedPlanes.forEach(plane => {
-   let planePose = plane.getPose(xrReferenceSpace);
+   let planePose = frame.getPose(plane.planeSpace, xrReferenceSpace);
    let planeVertices = plane.polygon; // plane.polygon is an array of objects
                                       // containing x,y,z coordinates
    
@@ -54,32 +54,39 @@ function onXRFrame(timestamp, frame) {
 
 ## Plane detection - a bit more advanced use
 In order to keep track of which planes have been added / removed, it’s possible to store the XRPlane objects and compare them against the set received in the latest frame:
+
 ```javascript
 let planes = Set();
  
 function onXRFrame(timestamp, frame) {
- let previousPlanes = Set(planes);
- let detectedPlanes = frame.worldInformation.detectedPlanes;
- detectedPlanes.forEach(plane => {
-   if (previousPlanes.has(plane)) {
-     // Handle previously seen plane - its properties may have changed.
+  let detectedPlanes = frame.worldInformation.detectedPlanes;
+
+  planes.forEach(plane => {
+    if(!detectedPlanes.has(plane)) {
+      // Handle removed plane - `plane` was present in previous frame but is no longer tracked.
+    }
+  });
+
+  detectedPlanes.forEach(plane => {
+    if (planes.has(plane)) {
+      if(plane.lastChangedTime == timestamp) {
+        // Handle previously seen plane that was updated in current frame.
+      } else {
+        // Handle previously seen plane that was not updated in current frame.
+        // Depending on the application, this could be a no-op.
+      }
+    } else {
+      // Handle new plane.
+    }
+  });
  
-     previousPlanes.delete(plane);
-   } else {
-     // Handle new plane.
-   }
- });
-  previousPlanes.forEach(plane => {
-   // Handle removed plane - it wasn't detected in this frame.
- });
+  planes = detectedPlanes;
  
- planes = Set(detectedPlanes);
- 
- frame.session.requestAnimationFrame(onXRFrame);
+  frame.session.requestAnimationFrame(onXRFrame);
 }
 ```
 
-As shown above, there is currently no way for the application to know whether the plane object properties have changed. It might be beneficial to provide such mechanism to make it easier for applications to avoid unnecessary scene updates (like re-computing plane’s triangle mesh).
+As shown above, the application can check whether a plane object was updated in current frame by comparing `plane.lastChangedTime` with the `timestamp` passed in to `requestAnimationFrame()` callback.
 
 ## Subsumed planes
 It is possible that as the understanding of the user’s environment becomes more refined, some planes will be merged into other planes. In the model above, this situation will translate into the removal of a subsumed plane & adjustment of the properties of the subsuming plane.
