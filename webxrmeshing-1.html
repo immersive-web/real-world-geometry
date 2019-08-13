@@ -1214,7 +1214,7 @@ Possible extra rowspan handling
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-DREAM" rel="stylesheet" type="text/css">
   <meta content="Bikeshed version 450e0499b28bb4c684052ad936ad1e7d36c4eac5" name="generator">
-  <meta content="62f098d90d41f2c9410e12261d023962c1c35bea" name="document-revision">
+  <meta content="40250851af1e728485aa5354217ffac892e4b2b7" name="document-revision">
   <link href="favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
   <link href="favicon-96x96.png" rel="icon" sizes="96x96" type="image/png">
 <style>
@@ -1594,8 +1594,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <p>physics: interaction of virtual objects with the real world</p>
      <li data-md>
       <p>occlusion: blocking part or the whole virtual object by a real world one</p>
-     <li data-md>
-      <p>hit testing</p>
     </ol>
     <p>The most common use cases for the near mesh are:</p>
     <ol>
@@ -1635,12 +1633,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 };
 </pre>
    <p>The <dfn class="idl-code" data-dfn-for="XRWorldMeshFeature/width" data-dfn-type="attribute" data-export id="dom-xrworldmeshfeature-width-width"><code>width</code><a class="self-link" href="#dom-xrworldmeshfeature-width-width"></a></dfn>, <dfn class="idl-code" data-dfn-for="XRWorldMeshFeature/height" data-dfn-type="attribute" data-export id="dom-xrworldmeshfeature-height-height"><code>height</code><a class="self-link" href="#dom-xrworldmeshfeature-height-height"></a></dfn> and <dfn class="idl-code" data-dfn-for="XRWorldMeshFeature/breadth" data-dfn-type="attribute" data-export id="dom-xrworldmeshfeature-breadth-breadth"><code>breadth</code><a class="self-link" href="#dom-xrworldmeshfeature-breadth-breadth"></a></dfn> attributes define the distance, in meters, of the width, height and breadth of the area around the observer that should be meshed.
-The <dfn class="idl-code" data-dfn-for="XRWorldMeshFeature/quality" data-dfn-type="attribute" data-export id="dom-xrworldmeshfeature-quality-quality"><code>quality</code><a class="self-link" href="#dom-xrworldmeshfeature-quality-quality"></a></dfn> attribute defines the UA dependant quality of the mesh.</p>
-   <div class="example" id="example-dc7c0110">
-    <a class="self-link" href="#example-dc7c0110"></a> The following code attempts to create an <code class="idl"><a data-link-type="idl">immersive-ar</a></code> <code class="idl"><a data-link-type="idl">XRSession</a></code> with world meshing. 
+The <dfn class="idl-code" data-dfn-for="XRWorldMeshFeature/quality" data-dfn-type="attribute" data-export id="dom-xrworldmeshfeature-quality-quality"><code>quality</code><a class="self-link" href="#dom-xrworldmeshfeature-quality-quality"></a></dfn> attribute defines the UA dependent quality of the mesh.</p>
+   <div class="example" id="example-c88961b1">
+    <a class="self-link" href="#example-c88961b1"></a> The following code attempts to create an <code class="idl"><a data-link-type="idl">immersive-ar</a></code> <code class="idl"><a data-link-type="idl">XRSession</a></code> with world meshing. 
 <pre class="highlight"><c- a>let</c-> xrSession<c- p>;</c->
 
-navigator<c- p>.</c->xr<c- p>.</c->requestSession<c- p>(</c-><c- u>"immersive-vr"</c-><c- p>,</c-> <c- p>{</c->
+navigator<c- p>.</c->xr<c- p>.</c->requestSession<c- p>(</c-><c- u>"immersive-ar"</c-><c- p>,</c-> <c- p>{</c->
                             requiredFeature<c- o>:</c-> <c- p>{</c->
                                 name<c- o>:</c-> <c- u>"XRWorldMeshFeature"</c-><c- p>,</c->
                                 quality<c- o>:</c-> <c- u>"medium"</c-><c- p>}}).</c->then<c- p>((</c->session<c- p>)</c-> <c- p>=></c-> <c- p>{</c->
@@ -1649,15 +1647,16 @@ navigator<c- p>.</c->xr<c- p>.</c->requestSession<c- p>(</c-><c- u>"immersive-vr
 </pre>
    </div>
    <p class="issue" id="issue-d4b98141"><a class="self-link" href="#issue-d4b98141"></a> should the world mesh follow the observer or should it stay relative to the original position or should it be configurable?</p>
+   <p class="issue" id="issue-15434211"><a class="self-link" href="#issue-15434211"></a> should the world mesh have an XRSpace?</p>
    <h3 class="heading settled" data-level="2.3" id="xr-near-mesh-feature"><span class="secno">2.3. </span><span class="content">XRNearMeshFeature</span><a class="self-link" href="#xr-near-mesh-feature"></a></h3>
-   <p>The "nearmesh" feature is used to request meshing near the observer. It is UA dependant what the scanned area for the near mesh is but it MUST not overlap with the world mesh.</p>
+   <p>The "nearmesh" feature is used to request meshing near the observer. It is UA dependent what the scanned area for the near mesh is but it MUST not overlap with the world mesh.</p>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="idl-code" data-dfn-type="dictionary" data-export id="dictdef-xrnearmeshfeature"><code><c- g>XRNearMeshFeature</c-></code><a class="self-link" href="#dictdef-xrnearmeshfeature"></a></dfn>: <a class="n" data-link-type="idl-name"><c- n>XRFeatureInit</c-></a> {
     <a class="n" data-link-type="idl-name" href="#enumdef-xrmeshquality" id="ref-for-enumdef-xrmeshquality②"><c- n>XRMeshQuality</c-></a> <dfn class="idl-code" data-default="&quot;medium&quot;" data-dfn-for="XRNearMeshFeature" data-dfn-type="dict-member" data-export data-type="XRMeshQuality " id="dom-xrnearmeshfeature-quality"><code><c- g>quality</c-></code><a class="self-link" href="#dom-xrnearmeshfeature-quality"></a></dfn> = "medium";
 };
 </pre>
-   <p>The <dfn class="idl-code" data-dfn-for="XRNearMeshFeature/quality" data-dfn-type="attribute" data-export id="dom-xrnearmeshfeature-quality-quality"><code>quality</code><a class="self-link" href="#dom-xrnearmeshfeature-quality-quality"></a></dfn> attribute defines the UA dependant quality of the mesh.</p>
-   <div class="example" id="example-f6bb9dbf">
-    <a class="self-link" href="#example-f6bb9dbf"></a> The following code attempts to create an <code class="idl"><a data-link-type="idl">immersive-ar</a></code> <code class="idl"><a data-link-type="idl">XRSession</a></code> with world meshing. 
+   <p>The <dfn class="idl-code" data-dfn-for="XRNearMeshFeature/quality" data-dfn-type="attribute" data-export id="dom-xrnearmeshfeature-quality-quality"><code>quality</code><a class="self-link" href="#dom-xrnearmeshfeature-quality-quality"></a></dfn> attribute defines the UA dependent quality of the mesh.</p>
+   <div class="example" id="example-79734e31">
+    <a class="self-link" href="#example-79734e31"></a> The following code attempts to create an <code class="idl"><a data-link-type="idl">immersive-ar</a></code> <code class="idl"><a data-link-type="idl">XRSession</a></code> with near meshing. 
 <pre class="highlight"><c- a>let</c-> xrSession<c- p>;</c->
 
 navigator<c- p>.</c->xr<c- p>.</c->requestSession<c- p>(</c-><c- u>"immersive-vr"</c-><c- p>,</c-> <c- p>{</c->
@@ -1668,6 +1667,7 @@ navigator<c- p>.</c->xr<c- p>.</c->requestSession<c- p>(</c-><c- u>"immersive-vr
 <c- p>});</c->
 </pre>
    </div>
+   <p class="issue" id="issue-a32157e9"><a class="self-link" href="#issue-a32157e9"></a> should the near mesh have an XRSpace?</p>
    <h2 class="heading settled" data-level="3" id="frame"><span class="secno">3. </span><span class="content">Frame Loop</span><a class="self-link" href="#frame"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="xrframe-structures"><span class="secno">3.1. </span><span class="content">XRMesh structures</span><a class="self-link" href="#xrframe-structures"></a></h3>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-xrmeshblock"><code><c- g>XRMeshBlock</c-></code></dfn> {
@@ -1677,8 +1677,9 @@ navigator<c- p>.</c->xr<c- p>.</c->requestSession<c- p>(</c-><c- u>"immersive-vr
 };
 </pre>
    <p>A <code class="idl"><a data-link-type="idl" href="#dictdef-xrmeshblock" id="ref-for-dictdef-xrmeshblock">XRMeshBlock</a></code> contains the geometry data of a single mesh instance.</p>
-   <p><code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-vertices" id="ref-for-dom-xrmeshblock-vertices">vertices</a></code> contains a buffer with points in 3D space. Each point consists of 3 floats: x, y, and z.</p>
-   <p>Each value in <code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-indices" id="ref-for-dom-xrmeshblock-indices">indices</a></code> points to an offset into <code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-vertices" id="ref-for-dom-xrmeshblock-vertices①">vertices</a></code>. It defines the corner of a triangle. The set of triangle creates a polygon mesh.</p>
+   <p><code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-vertices" id="ref-for-dom-xrmeshblock-vertices">vertices</a></code> contains a buffer with points in 3D space. Each point consists of 3 floats.</p>
+   <p>Each value in <code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-indices" id="ref-for-dom-xrmeshblock-indices">indices</a></code> points to an offset into a point inside <code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-vertices" id="ref-for-dom-xrmeshblock-vertices①">vertices</a></code> and defines the corner of a triangle. The set of triangles creates a polygon mesh.
+NOTE: the offset of each point is found by taking the index value and multiplying by 3.</p>
    <p><code class="idl"><a data-link-type="idl" href="#dictdef-xrmeshblock" id="ref-for-dictdef-xrmeshblock①">XRMeshBlock</a></code> can contain an optional <code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-normals" id="ref-for-dom-xrmeshblock-normals">normals</a></code> which defines a buffer with the normal of each vertex. The size of <code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-normals" id="ref-for-dom-xrmeshblock-normals①">normals</a></code> must be the same as <code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-vertices" id="ref-for-dom-xrmeshblock-vertices②">vertices</a></code>.</p>
    <p class="issue" id="issue-27e155ec"><a class="self-link" href="#issue-27e155ec"></a> is <a class="property" data-link-type="propdesc">normals</a> needed? If so, should it be requested during initialisation?</p>
 <pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="xrnearmesh"><code><c- g>XRNearMesh</c-></code></dfn> {
@@ -1706,7 +1707,8 @@ navigator<c- p>.</c->xr<c- p>.</c->requestSession<c- p>(</c-><c- u>"immersive-vr
    <h2 class="heading settled" data-level="4" id="security"><span class="secno">4. </span><span class="content">Security and Privacy Considerations</span><a class="self-link" href="#security"></a></h2>
    <p>The WebXR Meshing API is a powerful feature with that carries significant privacy risks.
 A UA MUST ask permission from the user during session creation before meshing data is returned to the page.</p>
-   <p>Additionally, mesh data MUST be constructed from the geometry of the real world. It MUST not reveal writing, colors, pictures or screen content since the user did not give express permission for camera access.</p>
+   <p>An <a class="property" data-link-type="propdesc">inline</a> session must NOT have access to mesh data.</p>
+   <p>Additionally, mesh data MUST be constructed from the geometry of the real world. It MUST not reveal writing, colors, pictures or other visual content.</p>
    <p class="issue" id="issue-22eb3e63"><a class="self-link" href="#issue-22eb3e63"></a> clarify this section</p>
    <p id="back-to-top" role="navigation"><a href="#toc"><abbr title="Back to Top">↑</abbr></a></p>
 <script src="https://www.w3.org/scripts/TR/2016/fixup.js"></script>
@@ -1848,6 +1850,8 @@ A UA MUST ask permission from the user during session creation before meshing da
   <h2 class="no-num no-ref heading settled" id="issues-index"><span class="content">Issues Index</span><a class="self-link" href="#issues-index"></a></h2>
   <div style="counter-reset:issue">
    <div class="issue"> should the world mesh follow the observer or should it stay relative to the original position or should it be configurable?<a href="#issue-d4b98141"> ↵ </a></div>
+   <div class="issue"> should the world mesh have an XRSpace?<a href="#issue-15434211"> ↵ </a></div>
+   <div class="issue"> should the near mesh have an XRSpace?<a href="#issue-a32157e9"> ↵ </a></div>
    <div class="issue"> is <a class="property" data-link-type="propdesc">normals</a> needed? If so, should it be requested during initialisation?<a href="#issue-27e155ec"> ↵ </a></div>
    <div class="issue"> should the mesh data persist per browser session or per xr session?<a href="#issue-ffb06508"> ↵ </a></div>
    <div class="issue"> clarify this section<a href="#issue-22eb3e63"> ↵ </a></div>

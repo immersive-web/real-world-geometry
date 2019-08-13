@@ -97,7 +97,6 @@ Typically mesh data is not used to determine things like hand gestures or the re
 The most common use cases for the world mesh are:
   1. physics: interaction of virtual objects with the real world
   1. occlusion: blocking part or the whole virtual object by a real world one
-  1. hit testing
 
 The most common use cases for the near mesh are:
   1. a visual representation of objects near the viewer.
@@ -151,7 +150,7 @@ dictionary XRWorldMeshFeature: XRFeatureInit {
 </pre>
 
 The <dfn attribute for="XRWorldMeshFeature/width">width</dfn>, <dfn attribute for="XRWorldMeshFeature/height">height</dfn> and <dfn attribute for="XRWorldMeshFeature/breadth">breadth</dfn> attributes define the distance, in meters, of the width, height and breadth of the area around the observer that should be meshed.
-The <dfn attribute for="XRWorldMeshFeature/quality">quality</dfn> attribute defines the UA dependant quality of the mesh.
+The <dfn attribute for="XRWorldMeshFeature/quality">quality</dfn> attribute defines the UA dependent quality of the mesh.
 
 <div class="example">
 The following code attempts to create an {{immersive-ar}} {{XRSession}} with world meshing.
@@ -159,7 +158,7 @@ The following code attempts to create an {{immersive-ar}} {{XRSession}} with wor
 <pre highlight="js">
 let xrSession;
 
-navigator.xr.requestSession("immersive-vr", {
+navigator.xr.requestSession("immersive-ar", {
                             requiredFeature: {
                                 name: "XRWorldMeshFeature",
                                 quality: "medium"}}).then((session) => {
@@ -170,11 +169,13 @@ navigator.xr.requestSession("immersive-vr", {
 
 ISSUE: should the world mesh follow the observer or should it stay relative to the original position or should it be configurable?
 
+ISSUE: should the world mesh have an XRSpace?
+
 
 XRNearMeshFeature {#xr-near-mesh-feature}
 -----------------
 
-The "nearmesh" feature is used to request meshing near the observer. It is UA dependant what the scanned area for the near mesh is but it MUST not overlap with the world mesh.
+The "nearmesh" feature is used to request meshing near the observer. It is UA dependent what the scanned area for the near mesh is but it MUST not overlap with the world mesh.
 
 <pre class="idl">
 dictionary XRNearMeshFeature: XRFeatureInit {
@@ -182,10 +183,10 @@ dictionary XRNearMeshFeature: XRFeatureInit {
 };
 </pre>
 
-The <dfn attribute for="XRNearMeshFeature/quality">quality</dfn> attribute defines the UA dependant quality of the mesh.
+The <dfn attribute for="XRNearMeshFeature/quality">quality</dfn> attribute defines the UA dependent quality of the mesh.
 
 <div class="example">
-The following code attempts to create an {{immersive-ar}} {{XRSession}} with world meshing.
+The following code attempts to create an {{immersive-ar}} {{XRSession}} with near meshing.
 
 <pre highlight="js">
 let xrSession;
@@ -198,6 +199,8 @@ navigator.xr.requestSession("immersive-vr", {
 });
 </pre>
 </div>
+
+ISSUE: should the near mesh have an XRSpace?
 
 Frame Loop {#frame}
 ==========
@@ -215,10 +218,10 @@ dictionary XRMeshBlock {
 
 A {{XRMeshBlock}} contains the geometry data of a single mesh instance.
 
-{{XRMeshBlock/vertices}} contains a buffer with points in 3D space. Each point consists of 3 floats: x, y, and z.
+{{XRMeshBlock/vertices}} contains a buffer with points in 3D space. Each point consists of 3 floats.
 
-Each value in {{XRMeshBlock/indices}} points to an offset into {{XRMeshBlock/vertices}}. It defines the corner of a triangle. The set of triangle creates a polygon mesh.
-
+Each value in {{XRMeshBlock/indices}} points to an offset into a point inside {{XRMeshBlock/vertices}} and defines the corner of a triangle. The set of triangles creates a polygon mesh.
+NOTE: the offset of each point is found by taking the index value and multiplying by 3.
 
 {{XRMeshBlock}} can contain an optional {{XRMeshBlock/normals}} which defines a buffer with the normal of each vertex. The size of {{XRMeshBlock/normals}} must be the same as {{XRMeshBlock/vertices}}.
 
@@ -263,7 +266,9 @@ Security and Privacy Considerations {#security}
 The WebXR Meshing API is a powerful feature with that carries significant privacy risks.
 A UA MUST ask permission from the user during session creation before meshing data is returned to the page.
 
-Additionally, mesh data MUST be constructed from the geometry of the real world. It MUST not reveal writing, colors, pictures or screen content since the user did not give express permission for camera access.
+An 'inline' session must NOT have access to mesh data.
+
+Additionally, mesh data MUST be constructed from the geometry of the real world. It MUST not reveal writing, colors, pictures or other visual content.
 
 ISSUE: clarify this section
 
