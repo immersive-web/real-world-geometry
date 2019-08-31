@@ -95,8 +95,11 @@ A user agent can have support for no, one or both types of geometry and the webs
 Typically mesh data is not used to determine things like hand gestures or the recognition of real world objects. (However a UA could choose to infer this through postprocessing.)
 
 The most common use cases for the world mesh are:
-  1. physics: interaction of virtual objects with the real world
   1. occlusion: blocking part or the whole virtual object by a real world one
+  1. placement: ground virtual content to the real world
+  1. physics: interaction of virtual objects with the real world
+  1. navigation: allow virtual content to interact with the real world
+  1. visualization: highlight the real world
 
 The most common use cases for the near mesh are:
   1. a visual representation of objects near the viewer.
