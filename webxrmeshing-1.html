@@ -1214,7 +1214,7 @@ Possible extra rowspan handling
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-DREAM" rel="stylesheet" type="text/css">
   <meta content="Bikeshed version 450e0499b28bb4c684052ad936ad1e7d36c4eac5" name="generator">
-  <meta content="96026a9e9f808d1dc97a0b7ac170950da56e4597" name="document-revision">
+  <meta content="84c217a08960048b4bf6a919c4060b51afa4be05" name="document-revision">
   <link href="favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
   <link href="favicon-96x96.png" rel="icon" sizes="96x96" type="image/png">
 <style>
@@ -1517,7 +1517,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">WebXR Meshing API Level 1</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">A Collection of Interesting Ideas, <time class="dt-updated" datetime="2019-08-30">30 August 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">A Collection of Interesting Ideas, <time class="dt-updated" datetime="2019-09-03">3 September 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>Previous Versions:
@@ -1631,7 +1631,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p><code class="idl"><a data-link-type="idl" href="#enumdef-xrmeshquality" id="ref-for-enumdef-xrmeshquality">XRMeshQuality</a></code> defines the quality of the mesh. A higher quality means that the mesh will be finer but also more resource intensive. It is up to the UA to define the quality level.</p>
    <h3 class="heading settled" data-level="2.2" id="xr-world-mesh-feature"><span class="secno">2.2. </span><span class="content">XRWorldMeshFeature</span><a class="self-link" href="#xr-world-mesh-feature"></a></h3>
    <p>The "worldmesh" feature is used to request world meshing.</p>
-<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="idl-code" data-dfn-type="dictionary" data-export id="dictdef-xrworldmeshfeature"><code><c- g>XRWorldMeshFeature</c-></code><a class="self-link" href="#dictdef-xrworldmeshfeature"></a></dfn>: <a class="n" data-link-type="idl-name"><c- n>XRFeatureInit</c-></a> {
+<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="idl-code" data-dfn-type="dictionary" data-export id="dictdef-xrworldmeshfeature"><code><c- g>XRWorldMeshFeature</c-></code><a class="self-link" href="#dictdef-xrworldmeshfeature"></a></dfn> {
+    <c- b>required</c-> <a class="n" data-link-type="idl-name"><c- n>XRFeature</c-></a> <dfn class="idl-code" data-default="&quot;world-mesh&quot;" data-dfn-for="XRWorldMeshFeature" data-dfn-type="dict-member" data-export data-type="XRFeature " id="dom-xrworldmeshfeature-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-xrworldmeshfeature-name"></a></dfn> = "world-mesh";
     <a class="n" data-link-type="idl-name" href="#enumdef-xrmeshquality" id="ref-for-enumdef-xrmeshquality①"><c- n>XRMeshQuality</c-></a> <dfn class="idl-code" data-default="&quot;medium&quot;" data-dfn-for="XRWorldMeshFeature" data-dfn-type="dict-member" data-export data-type="XRMeshQuality " id="dom-xrworldmeshfeature-quality"><code><c- g>quality</c-></code><a class="self-link" href="#dom-xrworldmeshfeature-quality"></a></dfn> = "medium";
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double"><c- b>double</c-></a> <dfn class="idl-code" data-default="10.0" data-dfn-for="XRWorldMeshFeature" data-dfn-type="dict-member" data-export data-type="double " id="dom-xrworldmeshfeature-width"><code><c- g>width</c-></code><a class="self-link" href="#dom-xrworldmeshfeature-width"></a></dfn> = 10.0;
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double①"><c- b>double</c-></a> <dfn class="idl-code" data-default="10.0" data-dfn-for="XRWorldMeshFeature" data-dfn-type="dict-member" data-export data-type="double " id="dom-xrworldmeshfeature-height"><code><c- g>height</c-></code><a class="self-link" href="#dom-xrworldmeshfeature-height"></a></dfn> = 10.0;
@@ -1656,7 +1657,8 @@ navigator<c- p>.</c->xr<c- p>.</c->requestSession<c- p>(</c-><c- u>"immersive-ar
    <p class="issue" id="issue-15434211"><a class="self-link" href="#issue-15434211"></a> should the world mesh have an XRSpace?</p>
    <h3 class="heading settled" data-level="2.3" id="xr-near-mesh-feature"><span class="secno">2.3. </span><span class="content">XRNearMeshFeature</span><a class="self-link" href="#xr-near-mesh-feature"></a></h3>
    <p>The "nearmesh" feature is used to request meshing near the observer. It is UA dependent what the scanned area for the near mesh is but it MUST not overlap with the world mesh.</p>
-<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="idl-code" data-dfn-type="dictionary" data-export id="dictdef-xrnearmeshfeature"><code><c- g>XRNearMeshFeature</c-></code><a class="self-link" href="#dictdef-xrnearmeshfeature"></a></dfn>: <a class="n" data-link-type="idl-name"><c- n>XRFeatureInit</c-></a> {
+<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="idl-code" data-dfn-type="dictionary" data-export id="dictdef-xrnearmeshfeature"><code><c- g>XRNearMeshFeature</c-></code><a class="self-link" href="#dictdef-xrnearmeshfeature"></a></dfn> {
+    <c- b>required</c-> <a class="n" data-link-type="idl-name"><c- n>XRFeature</c-></a> <dfn class="idl-code" data-default="&quot;near-mesh&quot;" data-dfn-for="XRNearMeshFeature" data-dfn-type="dict-member" data-export data-type="XRFeature " id="dom-xrnearmeshfeature-name"><code><c- g>name</c-></code><a class="self-link" href="#dom-xrnearmeshfeature-name"></a></dfn> = "near-mesh";
     <a class="n" data-link-type="idl-name" href="#enumdef-xrmeshquality" id="ref-for-enumdef-xrmeshquality②"><c- n>XRMeshQuality</c-></a> <dfn class="idl-code" data-default="&quot;medium&quot;" data-dfn-for="XRNearMeshFeature" data-dfn-type="dict-member" data-export data-type="XRMeshQuality " id="dom-xrnearmeshfeature-quality"><code><c- g>quality</c-></code><a class="self-link" href="#dom-xrnearmeshfeature-quality"></a></dfn> = "medium";
 };
 </pre>
@@ -1688,6 +1690,7 @@ navigator<c- p>.</c->xr<c- p>.</c->requestSession<c- p>(</c-><c- u>"immersive-vr
 NOTE: the offset of each point is found by taking the index value and multiplying by 3.</p>
    <p><code class="idl"><a data-link-type="idl" href="#dictdef-xrmeshblock" id="ref-for-dictdef-xrmeshblock①">XRMeshBlock</a></code> can contain an optional <code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-normals" id="ref-for-dom-xrmeshblock-normals">normals</a></code> which defines a buffer with the normal of each vertex. The size of <code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-normals" id="ref-for-dom-xrmeshblock-normals①">normals</a></code> must be the same as <code class="idl"><a data-link-type="idl" href="#dom-xrmeshblock-vertices" id="ref-for-dom-xrmeshblock-vertices②">vertices</a></code>.</p>
    <p class="issue" id="issue-27e155ec"><a class="self-link" href="#issue-27e155ec"></a> is <a class="property" data-link-type="propdesc">normals</a> needed? If so, should it be requested during initialisation?</p>
+   <p class="issue" id="issue-71f7789e"><a class="self-link" href="#issue-71f7789e"></a> should we allow `Uint32Array` for indices?</p>
 <pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="xrnearmesh"><code><c- g>XRNearMesh</c-></code></dfn> {
     <c- b>readonly</c-> <c- b>setlike</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-xrmeshblock" id="ref-for-dictdef-xrmeshblock②"><c- n>XRMeshBlock</c-></a>>;
 };
@@ -1714,7 +1717,7 @@ NOTE: the offset of each point is found by taking the index value and multiplyin
    <p>The WebXR Meshing API is a powerful feature with that carries significant privacy risks.
 A UA MUST ask permission from the user during session creation before meshing data is returned to the page.</p>
    <p>An <a class="property" data-link-type="propdesc">inline</a> session must NOT have access to mesh data.</p>
-   <p>Additionally, mesh data MUST be constructed from the geometry of the real world. It MUST not reveal writing, colors, pictures or other visual content.</p>
+   <p>Additionally, mesh data MUST be constructed from the geometry of the real world. It MUST not reveal writing, colors, pictures, details of people or other visual content that reveals anything other than an approximated outline.</p>
    <p class="issue" id="issue-22eb3e63"><a class="self-link" href="#issue-22eb3e63"></a> clarify this section</p>
    <p id="back-to-top" role="navigation"><a href="#toc"><abbr title="Back to Top">↑</abbr></a></p>
 <script src="https://www.w3.org/scripts/TR/2016/fixup.js"></script>
@@ -1743,6 +1746,12 @@ A UA MUST ask permission from the user during session creation before meshing da
     <ul>
      <li><a href="#dom-xrframe-metadata">attribute for XRFrame</a><span>, in §3.2</span>
      <li><a href="#dom-xrframe-metadata①">dict-member for XRFrame</a><span>, in §3.2</span>
+    </ul>
+   <li>
+    name
+    <ul>
+     <li><a href="#dom-xrnearmeshfeature-name">dict-member for XRNearMeshFeature</a><span>, in §2.3</span>
+     <li><a href="#dom-xrworldmeshfeature-name">dict-member for XRWorldMeshFeature</a><span>, in §2.2</span>
     </ul>
    <li><a href="#dom-xrmetadata-nearmesh">nearMesh</a><span>, in §3.1</span>
    <li><a href="#dom-xrmeshblock-normals">normals</a><span>, in §3.1</span>
@@ -1818,14 +1827,16 @@ A UA MUST ask permission from the user during session creation before meshing da
    <a href="#dom-xrmeshquality-high"><code><c- s>"high"</c-></code></a>
 };
 
-<c- b>dictionary</c-> <a href="#dictdef-xrworldmeshfeature"><code><c- g>XRWorldMeshFeature</c-></code></a>: <a class="n" data-link-type="idl-name"><c- n>XRFeatureInit</c-></a> {
+<c- b>dictionary</c-> <a href="#dictdef-xrworldmeshfeature"><code><c- g>XRWorldMeshFeature</c-></code></a> {
+    <c- b>required</c-> <a class="n" data-link-type="idl-name"><c- n>XRFeature</c-></a> <a data-default="&quot;world-mesh&quot;" data-type="XRFeature " href="#dom-xrworldmeshfeature-name"><code><c- g>name</c-></code></a> = "world-mesh";
     <a class="n" data-link-type="idl-name" href="#enumdef-xrmeshquality" id="ref-for-enumdef-xrmeshquality①①"><c- n>XRMeshQuality</c-></a> <a data-default="&quot;medium&quot;" data-type="XRMeshQuality " href="#dom-xrworldmeshfeature-quality"><code><c- g>quality</c-></code></a> = "medium";
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double③"><c- b>double</c-></a> <a data-default="10.0" data-type="double " href="#dom-xrworldmeshfeature-width"><code><c- g>width</c-></code></a> = 10.0;
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double①①"><c- b>double</c-></a> <a data-default="10.0" data-type="double " href="#dom-xrworldmeshfeature-height"><code><c- g>height</c-></code></a> = 10.0;
     <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-double" id="ref-for-idl-double②①"><c- b>double</c-></a> <a data-default="10.0" data-type="double " href="#dom-xrworldmeshfeature-breadth"><code><c- g>breadth</c-></code></a> = 10.0;
 };
 
-<c- b>dictionary</c-> <a href="#dictdef-xrnearmeshfeature"><code><c- g>XRNearMeshFeature</c-></code></a>: <a class="n" data-link-type="idl-name"><c- n>XRFeatureInit</c-></a> {
+<c- b>dictionary</c-> <a href="#dictdef-xrnearmeshfeature"><code><c- g>XRNearMeshFeature</c-></code></a> {
+    <c- b>required</c-> <a class="n" data-link-type="idl-name"><c- n>XRFeature</c-></a> <a data-default="&quot;near-mesh&quot;" data-type="XRFeature " href="#dom-xrnearmeshfeature-name"><code><c- g>name</c-></code></a> = "near-mesh";
     <a class="n" data-link-type="idl-name" href="#enumdef-xrmeshquality" id="ref-for-enumdef-xrmeshquality②①"><c- n>XRMeshQuality</c-></a> <a data-default="&quot;medium&quot;" data-type="XRMeshQuality " href="#dom-xrnearmeshfeature-quality"><code><c- g>quality</c-></code></a> = "medium";
 };
 
@@ -1859,6 +1870,7 @@ A UA MUST ask permission from the user during session creation before meshing da
    <div class="issue"> should the world mesh have an XRSpace?<a href="#issue-15434211"> ↵ </a></div>
    <div class="issue"> should the near mesh have an XRSpace?<a href="#issue-a32157e9"> ↵ </a></div>
    <div class="issue"> is <a class="property" data-link-type="propdesc">normals</a> needed? If so, should it be requested during initialisation?<a href="#issue-27e155ec"> ↵ </a></div>
+   <div class="issue"> should we allow `Uint32Array` for indices?<a href="#issue-71f7789e"> ↵ </a></div>
    <div class="issue"> should the mesh data persist per browser session or per xr session?<a href="#issue-ffb06508"> ↵ </a></div>
    <div class="issue"> clarify this section<a href="#issue-22eb3e63"> ↵ </a></div>
   </div>
