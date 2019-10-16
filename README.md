@@ -1,5 +1,5 @@
 # Real World Geometry
-Feature lead: John Pallett (@johnpallett)
+Feature lead: Piotr Bialecki (@bialpo)
 
 Status: Incubation
 
