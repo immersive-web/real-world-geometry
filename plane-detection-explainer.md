@@ -15,31 +15,28 @@ The returned set will contain all planes tracked in the current frame, including
 
 The information stored in an XRPlane consists of plane orientation (if known), a convex polygon approximating detected plane, and the pose of the plane’s center that can be retrieved given a reference space. The center’s pose describes a new frame of reference in such a way that the Y axis is a plane’s normal vector, and X & Z axes are right and top vectors, respectively. The polygon vertices are specified in the reference space described by the plane center’s pose. The information retrieved from a plane is valid only during the session’s `requestAnimationFrame` callback, same as the XRFrame object from which it was obtained.
 
-Plane tracking is enabled via parameters passed to `configureWorldTracking`. This signals that WebXR should start populating the `detectedPlanes` attribute for each subsequent XRFrame delivered to `requestAnimationFrame` callback. This approach also allows us to extend the plane detection configuration easily if we choose to do so (for example to enable pre-filtering of planes based on their orientation).
+Plane tracking is enabled by creating an XRSession with an appropriate feature descriptor. The feature descriptor that the applications can use to enable the feature is `"plane-detection"`.
 
 ## Plane detection - quick start
 The below steps assume that you already have created a basic application using the [WebXR Device API](https://immersive-web.github.io/webxr/).
 
 In order to use the plane detection API in the WebXR application, we need to first configure the session:
 ```javascript
-let xrSession = ...; // XRSession retrieved from
-                     // successful call to XR.requestSession()
- 
-xrSession.updateWorldTrackingState({
- planeDetectionState : {
-   enabled : true
- }
-});
+const options = {
+  requiredFeatures: [ "plane-detection" ]
+};
+
+let xrSession = await navigator.xr.requestSession("immersive-ar", options);
 ```
 
-Subsequently, when the scheduled `requestAnimationFrame()` callback fires, the received XRFrame will now contain plane information in its `worldInformation` attribute:
+Subsequently, when the scheduled `requestAnimationFrame()` callback fires, the received XRFrame will now contain plane information in its `detectedPlanes` attribute:
 ```javascript
 let xrReferenceSpace = ...; // XRReferenceSpace retrieved from successful
-                            // call to xr_session.requestReferenceSpace().
+                            // call to xrSession.requestReferenceSpace().
  
-// Function that's passed in to XRSession.requestAnimationFrame().
+// `requestAnimationFrame` callback:
 function onXRFrame(timestamp, frame) {
- let detectedPlanes = frame.worldInformation.detectedPlanes;
+ let detectedPlanes = frame.detectedPlanes;
  detectedPlanes.forEach(plane => {
    let planePose = frame.getPose(plane.planeSpace, xrReferenceSpace);
    let planeVertices = plane.polygon; // plane.polygon is an array of objects
@@ -59,7 +56,7 @@ In order to keep track of which planes have been added / removed, it’s possibl
 let planes = Set();
  
 function onXRFrame(timestamp, frame) {
-  let detectedPlanes = frame.worldInformation.detectedPlanes;
+  let detectedPlanes = frame.detectedPlanes;
 
   planes.forEach(plane => {
     if(!detectedPlanes.has(plane)) {
@@ -86,7 +83,7 @@ function onXRFrame(timestamp, frame) {
 }
 ```
 
-As shown above, the application can check whether a plane object was updated in current frame by comparing `plane.lastChangedTime` with the `timestamp` passed in to `requestAnimationFrame()` callback.
+As shown above, the application can check whether a plane object was updated in current frame by comparing `plane.lastChangedTime` with the `timestamp` passed in to `requestAnimationFrame()` callback. Note that a plane is only treated as updated when some of its attributes have changed. This means that a plane whose `planeSpace` has a different pose relative to some other space will *not* be considered as updated, as the pose is a derived property of a pair of spaces, not the plane object itself.
 
 ## Subsumed planes
 It is possible that as the understanding of the user’s environment becomes more refined, some planes will be merged into other planes. In the model above, this situation will translate into the removal of a subsumed plane & adjustment of the properties of the subsuming plane.
@@ -96,12 +93,12 @@ Some of the important takeaways that might not be immediately apparent from the 
 - The entire API surface is synchronous.
 - Plane attributes are only well-defined during `XRSession.requestAnimationFrame()` callback.
 - Strictly equal plane objects represent the same plane.
-- If a plane was detected in frame N and is still being detected in frame N+1, it will be represented by exactly the same object in `worldInformation.detectedPlanes` set, potentially with updated attributes. 
-- If a plane was detected in frame N and is no longer being detected in frame N+1, it will not be present in `worldInformation.detectedPlanes` set. Although an application might still contain references to its plane object, any access to its properties will result in an exception.
+- If a plane was detected in frame N and is still being detected in frame N+1, it will be represented by exactly the same object in `detectedPlanes` set, potentially with updated attributes.
+- If a plane was detected in frame N and is no longer being detected in frame N+1, it will not be present in `detectedPlanes` set. Although an application might still contain references to its plane object, any access to its properties will result in an exception.
 - If the application needs to access plane data information from previous frames, it has to copy the properties of the planes it’s interested in.
 
 ## Synchronous hit-test
-Exposing planes to the application also allows the application to implement custom, synchronous hittest against those planes. Potential downside of this approach is the lack of access to the same data that the underlying AR frameworks are using to perform hit-test - this can result in lower quality of hit-test results when they are computed purely in JavaScript.
+Exposing planes to the application also allows the application to implement custom, synchronous hit-test against those planes. Potential downside of this approach is the lack of access to the same data that the underlying AR frameworks are using to perform hit-test - this can result in lower quality of hit-test results when they are computed purely in JavaScript.
 
 ## Current limitations
-During a session that has enabled plane detection, the information about planes gets refined over time. This poses challenges to the developers as they cannot assume that the plane’s polygon or center won’t change. Implications of plane information changing are that positioning objects relative to the plane might require adjusting said objects’ positions. One possible solution to this problem would be an introduction of / integrating anchors with plane detection.
+During a session that has enabled plane detection, the information about planes gets refined over time. This poses challenges to the developers as they cannot assume that the plane’s polygon or pose won’t change. Implications of plane information changing are that positioning objects relative to the plane might require adjusting said objects’ positions. One possible solution to this problem would be an introduction of / integrating anchors with plane detection.
