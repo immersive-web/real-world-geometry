@@ -95,8 +95,11 @@ A user agent can have support for no, one or both types of geometry and the webs
 Typically mesh data is not used to determine things like hand gestures or the recognition of real world objects. (However a UA could choose to infer this through postprocessing.)
 
 The most common use cases for the world mesh are:
-  1. physics: interaction of virtual objects with the real world
   1. occlusion: blocking part or the whole virtual object by a real world one
+  1. placement: ground virtual content to the real world
+  1. physics: interaction of virtual objects with the real world
+  1. navigation: allow virtual content to interact with the real world
+  1. visualization: highlight the real world
 
 The most common use cases for the near mesh are:
   1. a visual representation of objects near the viewer.
@@ -141,7 +144,8 @@ XRWorldMeshFeature {#xr-world-mesh-feature}
 The "worldmesh" feature is used to request world meshing.
 
 <pre class="idl">
-dictionary XRWorldMeshFeature: XRFeatureInit {
+dictionary XRWorldMeshFeature {
+    required XRFeature name = "world-mesh";
     XRMeshQuality quality = "medium";
     double width = 10.0;
     double height = 10.0;
@@ -178,7 +182,8 @@ XRNearMeshFeature {#xr-near-mesh-feature}
 The "nearmesh" feature is used to request meshing near the observer. It is UA dependent what the scanned area for the near mesh is but it MUST not overlap with the world mesh.
 
 <pre class="idl">
-dictionary XRNearMeshFeature: XRFeatureInit {
+dictionary XRNearMeshFeature {
+    required XRFeature name = "near-mesh";
     XRMeshQuality quality = "medium";
 };
 </pre>
@@ -227,6 +232,8 @@ NOTE: the offset of each point is found by taking the index value and multiplyin
 
 Issue: is 'normals' needed? If so, should it be requested during initialisation?
 
+Issue: should we allow `Uint32Array` for indices?
+
 <pre class="idl">
 interface XRNearMesh {
     readonly setlike&lt;XRMeshBlock&gt;;
@@ -268,7 +275,7 @@ A UA MUST ask permission from the user during session creation before meshing da
 
 An 'inline' session must NOT have access to mesh data.
 
-Additionally, mesh data MUST be constructed from the geometry of the real world. It MUST not reveal writing, colors, pictures or other visual content.
+Additionally, mesh data MUST be constructed from the geometry of the real world. It MUST not reveal writing, colors, pictures, details of people or other visual content that reveals anything other than an approximated outline.
 
 ISSUE: clarify this section
 
