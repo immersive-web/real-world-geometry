@@ -1,0 +1,7 @@
+{
+    "src_file": "plane-detection.bs",
+    "type": "bikeshed",
+    "params": {
+        "force": 1
+    }
+}
