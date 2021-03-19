@@ -8,7 +8,7 @@ There are multiple possible ways of addressing this problem:
 2. Promise-based approach.
 3. Attribute-based approach.
 
-If needed, all of the approaches described below can be extended to inform about plane additions and modifications.
+If needed, all of the approaches described below can be extended to inform about plane additions and modifications. The information about plane modifications is potentially more important, since it cannot be inferred based on the contents of `detectedPlanes` field.
 
 ## Event-based approach
 Application could be informed of the removal / tracking loss of a plane object by registering an event handler for `onremoved` event (name is not final). In current design of plane detection feature, event handler could reasonably be exposed on either of the 2 interfaces:
@@ -31,10 +31,10 @@ plane.addEventListener('onremoved', (event) => {
 });
 ```
 
-- On XRWorldInformation:
+- On XRSession:
 
 ```webidl
-partial interface XRWorldInformation {
+partial interface XRSession {
  // Invoked when a plane is no longer being tracked.
  attribute EventHandler onplaneremoved;
 }
@@ -69,31 +69,53 @@ The application will likely attach a continuation to the promise every time a ne
 ### Discussion
 Similarly to event-based approach, the user agent must guarantee that the promise gets resolved prior to request animation frame callback (see [Timings](#timings), duration number 2.). The plane attributes will not be accessible from the continuation. If the application wants to act on the data during request animation frame callback, it will have to use a custom mechanism of doing so (e.g. by adding removed planes to a list that’s also accessible from request animation frame callback).
 
-It’s worth noting that unlike in event-based approach, adding a promise to `XRWorldInformation` interface is *not* proposed here. Having a promise on `XRWorldInformation` would be more problematic as the application would have to keep re-attaching a continuation to the promise every time previous promise got resolved - User Agent would have to guarantee that just prior to resolving previous promise, `XRWorldInformation.planesremoved` will return different promise object than the one about to be resolved. 
+It’s worth noting that unlike in event-based approach, adding a promise to `XRSession` interface is *not* proposed here. Having a promise on `XRSession` would be more problematic as the application would have to keep re-attaching a continuation to the promise every time previous promise got resolved - User Agent would have to guarantee that just prior to resolving previous promise, `XRSession.planesremoved` will return different promise object than the one about to be resolved.
 
-## Attribute-based approach
-In this approach, the `XRWorldInformation` interface will be extended with attributes that convey information about the planes that used to be present in previous frame but are no longer present in current frame.
+## Attribute-based approach - difference lists
+In this approach, the `XRSession` interface will be extended with attributes that convey information about the planes that used to be present in previous frame but are no longer present in current frame.
 
 ```webidl
 interface XRPlaneSet {
   readonly setlike<XRPlane>;
 }
 
-partial interface XRWorldInformation {
+partial interface XRSession {
  // (existing attribute) Set with planes detected in current frame.
  readonly attribute XRPlaneSet? detectedPlanes;
  // (new attribute) Set with planes that were detected in previous frame
  // but are no longer detected in current frame.
  readonly attribute XRPlaneSet? removedPlanes;
+ // (new attribute) Set with planes that were not detected before but
+ // have been detected in the current frame.
+ // This is a subset of `detectedPlanes`.
+ readonly attribute XRPlaneSet? addedPlanes;
+ // (new attribute) Set with planes that were detected before and have
+ // been modified in the current frame.
+ // This is a subset of `detectedPlanes`.
+ readonly attribute XRPlaneSet? modifiedPlanes;
 }
 ```
 
 This approach is mentioned in github issue [#4](https://github.com/immersive-web/real-world-geometry/issues/4) as “difference list”.
 
-### Discussion
-Attribute-based approach is simplest for the web application to deal with, and is consistent with overall API shape as it delivers all frame-related data to the application in the request animation frame callback through `XRFrame` instance. It is sufficient to iterate over list of planes at the beginning of request animation frame callback and perform any cleanup necessary due to planes no longer being detected. The attributes of planes present in `removedPlanes` array are not accessible.
+## Attribute-based approach - lastChangedTime attribite
 
-It’s worth noting that if we decide to also add `addedPlanes` and `modifiedPlanes`, some of the data can only be acted upon in request animation frame callback, which makes this approach even more suitable.
+In this approach, the `XRPlane` interface is extended with `lastChangedTime` that holds the timestamp of an `XRFrame` in which the plane attributes were last modified. The applications could then inspect the attribute to determine whether it needs to update some of its state.
+
+```webidl
+
+partial interface XRPlane {
+   readonly attribute DOMHighResTimeStamp lastChangedTime;
+};
+
+```
+
+This approach was first proposed in github issue [#4](https://github.com/immersive-web/real-world-geometry/issues/4#issuecomment-485595506).
+
+### Discussion
+Attribute-based approach is simplest for the web application to deal with, and is consistent with overall API shape as it delivers all frame-related data to the application in the request animation frame callback & input source events through `XRFrame` instance. It is sufficient to iterate over list of planes at the beginning of request animation frame callback and perform any additions / modifications / cleanups necessary due to the planes being newly detected / modified / removed. The attributes of planes present in `removedPlanes` will be accessible, but should not be relied upon as they'd represent stale state.
+
+Another attribute-based approach that in addition allows us to polyfill the other ones is the addition of `XRPlane.lastChangedTime` attribute. This approach would still expose all the necessary information to the apps, and allows us to defer the decision on how the final API shape should look like until developer feedback is gathered. One drawback is the API ergonomics, but in this particular case it could motivate its users to be more vocal about the desired API shape that we could then adopt.
 
 ## Timings
 Above approaches are making guarantees to the app developers about when will the event handlers fire / when will the promises resolve or get rejected, and when can the plane attributes be queried by the application. Below image serves to clarify the possible timings.

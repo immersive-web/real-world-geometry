@@ -123,6 +123,10 @@ Exposing planes to the application also allows the application to implement cust
 ## Current limitations
 During a session that has enabled plane detection, the information about planes gets refined over time. This poses challenges to the developers as they cannot assume that the plane’s polygon or pose won’t change. Implications of plane information changing are that positioning objects relative to the plane might require adjusting said objects’ positions. One possible solution to this problem would be an introduction of / integrating anchors with plane detection.
 
+## Appendix: Discussion on notifying about plane changes
+
+See [Planes - informing about removal](planes-notifying-about-removal.md).
+
 ## Appendix: proposed Web IDL
 
 ```webidl
