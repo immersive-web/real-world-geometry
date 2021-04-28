@@ -1,9 +1,9 @@
 # Plane detection explainer
 ## Introduction
 This document presents an overview of the plane detection API. The idea is that in order for some Augmented Reality scenarios to work nicely, developers need to know about surfaces present in the user’s environment. Example use cases:
-- Placing virtual objects in user’s environment.
-- Measuring user’s environment.
-- Real-world physics interactions.
+- Placing virtual objects in user’s environment. This use case is partially addressed by WebXR's hit-test API. Plane detection API extends the amount of information returned to the sites, allowing them to not only find where the rays would intersect with the real world, but also compute approximate area of detected surfaces.
+- Measuring user’s environment. The sites could then leverage that knowledge and procedurally generate game arenas or otherwise adapt to the system expanding its knowledge of the environment.
+- Real-world physics interactions. The sites could compute how the virtual objects should behave when colliding with user's environment. Other physical interactions are also possible (e.g. computing echo effects based on planes detected around the user).
 It’s possible that access to detected plane information will be useful for occlusion as well, though limitations of current RWG runtimes may limit the effectiveness.
 
 Later sections of this document show how applications can enable plane detection and retrieve information about the planes. More advanced use shows how plane lifetime management could be performed in an application. Please note that this document is not supposed to serve as an API reference - it only shows by example how the API could be used.
