@@ -197,7 +197,7 @@ XRPlaneSet {#plane-set}
 
 <script type="idl">
 interface XRPlaneSet {
-  readonly setlike<XRPlaneSet>;
+  readonly setlike<XRPlane>;
 };
 </script>
 
