@@ -14,7 +14,7 @@ Mailing List Archives: https://lists.w3.org/Archives/Public/public-immersive-web
 
 Editor: Piotr Bialecki 114482, Google http://google.com/, bialpio@google.com
 
-Abstract: 
+Abstract:
 </pre>
 
 <pre class="link-defaults">
@@ -209,9 +209,17 @@ partial interface XRFrame {
 };
 </script>
 
-An {{XRFrame}} is extended to contain {{XRFrame/detectedPlanes}} attribute which contains all planes that are still tracked in the frame. The set is initially empty and will be populated by the [=update planes=] algorithm. If this attribute is accessed when the frame is not [=XRFrame/active=], the user agent MUST throw {{InvalidStateError}}.
+{{XRFrame}} is extended to contain {{XRFrame/detectedPlanes}} attribute which contains all planes that are still tracked in the frame. The set is initially empty and will be populated by the [=update planes=] algorithm. If this attribute is accessed when the frame is not [=XRFrame/active=], the user agent MUST throw {{InvalidStateError}}.
 
-An {{XRSession}} is extended to contain associated <dfn for=XRSession>set of tracked planes</dfn>, which is initially empty. The elements of the set will be of {{XRPlane}} type.
+<script type="idl">
+partial interface XRSession {
+  Promise<undefined> initiateRoomCapture();
+};
+</script>
+
+{{XRSession}} is extended to contain the {{XRSession/initiateRoomCapture}} method which, if supported, will ask the {{XRCompositor}} to capture the current room layout. It is up to the {{XRCompositor}} if this will replace or augment the [=XRSession/set of tracked planes=].
+
+{{XRSession}} is also extended to contain associated <dfn for=XRSession>set of tracked planes</dfn>, which is initially empty. The elements of the set will be of {{XRPlane}} type.
 
 <div class="algorithm" data-algorithm="update-planes">
 In order to <dfn>update planes</dfn> for |frame|, the user agent MUST run the following steps:
