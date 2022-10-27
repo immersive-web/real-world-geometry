@@ -14,7 +14,7 @@ Mailing List Archives: https://lists.w3.org/Archives/Public/public-immersive-web
 
 Editor: Piotr Bialecki 114482, Google http://google.com/, bialpio@google.com
 
-Abstract: 
+Abstract:
 </pre>
 
 <pre class="link-defaults">
@@ -101,9 +101,15 @@ spec: WebXR Anchors Module; urlPrefix: https://immersive-web.github.io/anchors/#
     border-radius: .5em;
     padding: .5em;
     margin: .5em calc(-0.5em - 1px);
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='290'><text transform='rotate(-45)' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='70' y='210' opacity='.1'>Unstable</text></svg>");
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='290'><text transform='rotate(-45)' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='70' y='210' opacity='.1' fill='white'>Unstable</text></svg>");
     background-repeat: repeat;
-    background-color: #FFF4F4;
+    background-color: #282828;
+  }
+  @media (prefers-color-scheme: light) {
+    .unstable {
+      background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='290'><text transform='rotate(-45)' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='70' y='210' opacity='.1'>Unstable</text></svg>");
+      background-color: #FFF4F4;
+    }
   }
   .unstable h3:first-of-type {
     margin-top: 0.5rem;
@@ -209,9 +215,22 @@ partial interface XRFrame {
 };
 </script>
 
-An {{XRFrame}} is extended to contain {{XRFrame/detectedPlanes}} attribute which contains all planes that are still tracked in the frame. The set is initially empty and will be populated by the [=update planes=] algorithm. If this attribute is accessed when the frame is not [=XRFrame/active=], the user agent MUST throw {{InvalidStateError}}.
+{{XRFrame}} is extended to contain {{XRFrame/detectedPlanes}} attribute which contains all planes that are still tracked in the frame. The set is initially empty and will be populated by the [=update planes=] algorithm. If this attribute is accessed when the frame is not [=XRFrame/active=], the user agent MUST throw {{InvalidStateError}}.
 
-An {{XRSession}} is extended to contain associated <dfn for=XRSession>set of tracked planes</dfn>, which is initially empty. The elements of the set will be of {{XRPlane}} type.
+<div class="unstable">
+
+<script type="idl">
+partial interface XRSession {
+  Promise<undefined> initiateRoomCapture();
+};
+</script>
+
+{{XRSession}} is extended to contain the {{XRSession/initiateRoomCapture}} method which, if supported, will ask the {{XRCompositor}} to capture the current room layout. It is up to the {{XRCompositor}} if this will replace or augment the [=XRSession/set of tracked planes=]. The user agent MAY also ignore this call, for instance if it doesn't support a manual room capture more or if it determines that the room is already set up.
+The {{XRSession/initiateRoomCapture}} method MUST only be able to be called once per {{XRSession}}.
+
+</div>
+
+{{XRSession}} is also extended to contain associated <dfn for=XRSession>set of tracked planes</dfn>, which is initially empty. The elements of the set will be of {{XRPlane}} type.
 
 <div class="algorithm" data-algorithm="update-planes">
 In order to <dfn>update planes</dfn> for |frame|, the user agent MUST run the following steps:
