@@ -73,7 +73,7 @@ spec: WebXR Anchors Module; urlPrefix: https://immersive-web.github.io/anchors/#
   .tg th {
     border-style: solid;
     border-width: 1px;
-    background: #90b8de;
+    background: #704822;
     color: #fff;
     font-family: sans-serif;
     font-weight: bold;
@@ -81,7 +81,7 @@ spec: WebXR Anchors Module; urlPrefix: https://immersive-web.github.io/anchors/#
   }
   .tg td {
     padding: 4px 5px;
-    background-color: rgb(221, 238, 255);
+    background-color: rgb(30, 17, 0);
     font-family: monospace;
     border-style: solid;
     border-width: 1px;
@@ -109,6 +109,14 @@ spec: WebXR Anchors Module; urlPrefix: https://immersive-web.github.io/anchors/#
     .unstable {
       background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='290'><text transform='rotate(-45)' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='70' y='210' opacity='.1'>Unstable</text></svg>");
       background-color: #FFF4F4;
+    }
+
+    .tg th {
+      background: #90b8de;
+    }
+
+    .tg td {
+      background-color: rgb(221, 238, 255);
     }
   }
   .unstable h3:first-of-type {
@@ -174,6 +182,7 @@ interface XRPlane {
     [SameObject] readonly attribute XRSpace planeSpace;
 
     readonly attribute FrozenArray<DOMPointReadOnly> polygon;
+    readonly attribute sequence<DOMString> semanticLabels;
     readonly attribute XRPlaneOrientation? orientation;
     readonly attribute DOMHighResTimeStamp lastChangedTime;
 };
@@ -188,6 +197,55 @@ Each {{XRPlane}} has an associated <dfn for=XRPlane>native entity</dfn>.
 Each {{XRPlane}} has an associated <dfn for=XRPlane>frame</dfn>.
 
 The {{XRPlane/polygon}} is an array of vertices that describe the shape of the plane. They are returned in the form of a loop of points at the edges of the polygon, expressed in the coordinate system defined by {{XRPlane/planeSpace}}. The Y coordinate of each vertex MUST be <code>0.0</code>.
+
+<div class="unstable">
+
+The {{XRPlane/semanticLabels}} attribute is a sequence of strings that describe the [=semantic label=] of the polygon. This array is empty if there is no semantic information. The {{XRSystem}} SHOULD populate this sequence with the [=semantic label|semantic labels=] it has knowledge of.
+
+A <dfn>semantic label</dfn> is an ASCII lowercase DOMString that describes the name in the real world of the {{XRPlane}} as known by the {{XRSystem}}. The following table describes the known [=semantic label|semantic labels=]:
+
+<table class="tg">
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>floor</td>
+      <td>horizontal plane describing the known floor</td>
+    </tr>
+    <tr>
+      <td>ceiling</td>
+      <td>horizontal plane describing the known ceiling</td>
+    </tr>
+    <tr>
+      <td>wall</td>
+      <td>vertical plane describing a wall</td>
+    </tr>
+    <tr>
+      <td>desk</td>
+      <td>horizontal plane describing a desk</td>
+    </tr>
+    <tr>
+      <td>window</td>
+      <td>vertical plane describing a window</td>
+    </tr>
+    <tr>
+      <td>door</td>
+      <td>vertical plane describing a door</td>
+    </tr>
+    <tr>
+      <td>couch</td>
+      <td>vertical plane describing a basic</td>
+    </tr>
+  </tbody>
+</table>
+
+Note: Future specifications or modules may expand the set of [=semantic label|semantic labels=] to include additional or more specific labels.
+
+</div>
 
 The {{XRPlane/orientation}} describes orientation of the plane, as classified by the underlying XR system. In case the orientation cannot be classified into {{XRPlaneOrientation/"horizontal"}} or {{XRPlaneOrientation/"vertical"}} by the underlying XR system, this attribute will be set to <code>null</code>.
 
@@ -262,6 +320,7 @@ In order to <dfn>update plane object</dfn> |plane| from a [=native plane object=
     1. Set |plane|'s [=XRPlane/frame=] to |frame|.
     1. If |native plane| is classified by the underlying system as vertical, set |plane|'s {{XRPlane/orientation}} to {{XRPlaneOrientation/"vertical"}}. Otherwise, if |native plane| is classified by the underlying system as horizontal, set |plane|'s {{XRPlane/orientation}} to {{XRPlaneOrientation/"horizontal"}}. Otherwise, set |plane|'s {{XRPlane/orientation}} to <code>null</code>.
     1. Set |plane|'s {{XRPlane/polygon}} to the new array of vertices representing |native plane|'s polygon, performing all necessary conversions to account for differences in native plane polygon representation.
+    1. <div class="unstable">Set |plane|'s {{XRPlane/semanticLabels}} to a new sequence of [=semantic label|semantic labels=].</div>
     1. If desired, reduce the level of detail of the |plane|'s {{XRPlane/polygon}} as described in [[#privacy-security]].
     1. Set |plane|'s {{XRPlane/lastChangedTime}} to [=XRFrame/time=].
 </div>
