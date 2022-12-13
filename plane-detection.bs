@@ -238,7 +238,7 @@ A <dfn>semantic label</dfn> is an ASCII lowercase DOMString that describes the n
     </tr>
     <tr>
       <td>couch</td>
-      <td>vertical plane describing a basic</td>
+      <td>vertical plane describing a couch</td>
     </tr>
   </tbody>
 </table>
