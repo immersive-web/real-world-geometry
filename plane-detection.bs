@@ -50,14 +50,14 @@ spec: WebXR Anchors Module; urlPrefix: https://immersive-web.github.io/anchors/#
 
 <pre class=biblio>
 {
-	"webxr-anchors-module": {
-		"authors": [
-			"Piotr Bialecki"
-		],
-		"href": "https://immersive-web.github.io/anchors/",
-		"title": "WebXR Anchors Module",
-		"status": "DR"
-	}
+  "webxr-anchors-module": {
+    "authors": [
+      "Piotr Bialecki"
+    ],
+    "href": "https://immersive-web.github.io/anchors/",
+    "title": "WebXR Anchors Module",
+    "status": "DR"
+  }
 }
 </pre>
 
@@ -182,9 +182,9 @@ interface XRPlane {
     [SameObject] readonly attribute XRSpace planeSpace;
 
     readonly attribute FrozenArray<DOMPointReadOnly> polygon;
-    readonly attribute sequence<DOMString> semanticLabels;
     readonly attribute XRPlaneOrientation? orientation;
     readonly attribute DOMHighResTimeStamp lastChangedTime;
+    readonly attribute DOMString? semanticLabel;
 };
 </script>
 
@@ -200,50 +200,10 @@ The {{XRPlane/polygon}} is an array of vertices that describe the shape of the p
 
 <div class="unstable">
 
-The {{XRPlane/semanticLabels}} attribute is a sequence of strings that describe the [=semantic label=] of the polygon. This array is empty if there is no semantic information. The {{XRSystem}} SHOULD populate this sequence with the [=semantic label|semantic labels=] it has knowledge of.
+The {{XRPlane/semanticLabel}} attribute is a string that describes the [=semantic label=] of the polygon. This array is empty if there is no semantic information. The {{XRSystem}} SHOULD populate this  with the [=semantic label=] it has knowledge of.
 
 A <dfn>semantic label</dfn> is an ASCII lowercase DOMString that describes the name in the real world of the {{XRPlane}} as known by the {{XRSystem}}. The following table describes the known [=semantic label|semantic labels=]:
-
-<table class="tg">
-  <thead>
-    <tr>
-      <th>Label</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>floor</td>
-      <td>horizontal plane describing the known floor</td>
-    </tr>
-    <tr>
-      <td>ceiling</td>
-      <td>horizontal plane describing the known ceiling</td>
-    </tr>
-    <tr>
-      <td>wall</td>
-      <td>vertical plane describing a wall</td>
-    </tr>
-    <tr>
-      <td>desk</td>
-      <td>horizontal plane describing a desk</td>
-    </tr>
-    <tr>
-      <td>window</td>
-      <td>vertical plane describing a window</td>
-    </tr>
-    <tr>
-      <td>door</td>
-      <td>vertical plane describing a door</td>
-    </tr>
-    <tr>
-      <td>couch</td>
-      <td>vertical plane describing a couch</td>
-    </tr>
-  </tbody>
-</table>
-
-Note: Future specifications or modules may expand the set of [=semantic label|semantic labels=] to include additional or more specific labels.
+The list of semantic labels is defined in the <a href="https://github.com/immersive-web/semantic-labels">semantic label registry</a>.
 
 </div>
 
@@ -283,7 +243,7 @@ partial interface XRSession {
 };
 </script>
 
-{{XRSession}} is extended to contain the {{XRSession/initiateRoomCapture}} method which, if supported, will ask the {{XRCompositor}} to capture the current room layout. It is up to the {{XRCompositor}} if this will replace or augment the [=XRSession/set of tracked planes=]. The user agent MAY also ignore this call, for instance if it doesn't support a manual room capture more or if it determines that the room is already set up.
+{{XRSession}} is extended to contain the {{XRSession/initiateRoomCapture}} method which, if supported, will ask the {{XR Compositor}} to capture the current room layout. It is up to the {{XRCompositor}} if this will replace or augment the [=XRSession/set of tracked planes=]. The user agent MAY also ignore this call, for instance if it doesn't support a manual room capture more or if it determines that the room is already set up.
 The {{XRSession/initiateRoomCapture}} method MUST only be able to be called once per {{XRSession}}.
 
 </div>
@@ -320,7 +280,7 @@ In order to <dfn>update plane object</dfn> |plane| from a [=native plane object=
     1. Set |plane|'s [=XRPlane/frame=] to |frame|.
     1. If |native plane| is classified by the underlying system as vertical, set |plane|'s {{XRPlane/orientation}} to {{XRPlaneOrientation/"vertical"}}. Otherwise, if |native plane| is classified by the underlying system as horizontal, set |plane|'s {{XRPlane/orientation}} to {{XRPlaneOrientation/"horizontal"}}. Otherwise, set |plane|'s {{XRPlane/orientation}} to <code>null</code>.
     1. Set |plane|'s {{XRPlane/polygon}} to the new array of vertices representing |native plane|'s polygon, performing all necessary conversions to account for differences in native plane polygon representation.
-    1. <div class="unstable">Set |plane|'s {{XRPlane/semanticLabels}} to a new sequence of [=semantic label|semantic labels=].</div>
+    1. <div class="unstable">Set |plane|'s {{XRPlane/semanticLabel}} to a new string with the [=semantic label|semantic labels=].</div>
     1. If desired, reduce the level of detail of the |plane|'s {{XRPlane/polygon}} as described in [[#privacy-security]].
     1. Set |plane|'s {{XRPlane/lastChangedTime}} to [=XRFrame/time=].
 </div>
