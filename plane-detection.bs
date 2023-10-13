@@ -170,6 +170,7 @@ XRPlane {#plane}
 -------
 
 <script type="idl">
+[Exposed=Window]
 interface XRPlane {
     [SameObject] readonly attribute XRSpace planeSpace;
 
@@ -202,6 +203,7 @@ XRPlaneSet {#plane-set}
 ----------
 
 <script type="idl">
+[Exposed=Window]
 interface XRPlaneSet {
   readonly setlike<XRPlane>;
 };
