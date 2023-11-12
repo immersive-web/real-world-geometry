@@ -203,7 +203,7 @@ The {{XRPlane/polygon}} is an array of vertices that describe the shape of the p
 
 The {{XRPlane/semanticLabel}} attribute is a string that describes the [=semantic label=] of the polygon. This array is empty if there is no semantic information. The {{XRSystem}} SHOULD populate this  with the [=semantic label=] it has knowledge of.
 
-A <dfn>semantic label</dfn> is an ASCII lowercase DOMString that describes the name in the real world of the {{XRPlane}} as known by the {{XRSystem}}. The following table describes the known [=semantic label|semantic labels=]:
+A <dfn>semantic label</dfn> is an ASCII lowercase DOMString that describes the name in the real world of the {{XRPlane}} as known by the {{XRSystem}}.
 The list of semantic labels is defined in the <a href="https://github.com/immersive-web/semantic-labels">semantic label registry</a>.
 
 </div>
