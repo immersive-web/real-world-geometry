@@ -5,8 +5,11 @@
   <title>WebXR Plane Detection Module</title>
   <meta content="CG-DRAFT" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 82ce88815, updated Thu Sep 7 16:33:55 2023 -0700" name="generator">
+  <meta content="Bikeshed version b25686b9f, updated Fri Mar 14 14:15:20 2025 -0700" name="generator">
   <link href="https://github.com/immersive-web/real-world-geometry/" rel="canonical">
+  <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
+  <meta content="dark light" name="color-scheme">
+  <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>
   .non-normative::before {
     content: "This section is non-normative.";
@@ -144,7 +147,6 @@ pre .property::before, pre .property::after {
 }
 </style>
 <style>/* Boilerplate: style-colors */
-
 /* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
 :root {
     color-scheme: light dark;
@@ -398,11 +400,15 @@ figcaption:not(.no-marker)::before {
 :root {
     --dfnpanel-bg: #ddd;
     --dfnpanel-text: var(--text);
+    --dfnpanel-target-bg: #ffc;
+    --dfnpanel-target-outline: orange;
 }
 @media (prefers-color-scheme: dark) {
     :root {
         --dfnpanel-bg: #222;
         --dfnpanel-text: var(--text);
+        --dfnpanel-target-bg: #333;
+        --dfnpanel-target-outline: silver;
     }
 }
 .dfn-panel {
@@ -425,11 +431,13 @@ figcaption:not(.no-marker)::before {
 .dfn-panel > b { display: block; }
 .dfn-panel a { color: var(--dfnpanel-text); }
 .dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
+.dfn-panel a:focus {
+    outline: 5px auto Highlight;
+    outline: 5px auto -webkit-focus-ring-color;
+}
 .dfn-panel > b + b { margin-top: 0.25em; }
 .dfn-panel ul { padding: 0 0 0 1em; list-style: none; }
 .dfn-panel li a {
-    white-space: pre;
-    display: inline-block;
     max-width: calc(300px - 1.5em - 1em);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -438,67 +446,84 @@ figcaption:not(.no-marker)::before {
 .dfn-panel.activated {
     display: inline-block;
     position: fixed;
-    left: .5em;
+    left: 8px;
     bottom: 2em;
     margin: 0 auto;
     max-width: calc(100vw - 1.5em - .4em - .5em);
     max-height: 30vh;
+    transition: left 1s ease-out, bottom 1s ease-out;
 }
 
-.dfn-paneled[role="button"] { cursor: pointer; }
+.dfn-panel .link-item:hover {
+    text-decoration: underline;
+}
+.dfn-panel .link-item .copy-icon {
+    opacity: 0;
+}
+.dfn-panel .link-item:hover .copy-icon,
+.dfn-panel .link-item .copy-icon:focus {
+    opacity: 1;
+}
+
+.dfn-panel .copy-icon {
+    display: inline-block;
+    margin-right: 0.5em;
+    width: 0.85em;
+    height: 1em;
+    border-radius: 3px;
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+.dfn-panel .copy-icon .icon {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.dfn-panel .copy-icon .icon::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid black;
+    background-color: #ccc;
+    opacity: 0.25;
+    transform: translate(3px, -3px);
+}
+
+.dfn-panel .copy-icon:active .icon::before {
+    opacity: 1;
+}
+
+.dfn-paneled[role="button"] { cursor: help; }
+
+.highlighted {
+    animation: target-fade 3s;
+}
+
+@keyframes target-fade {
+    from {
+        background-color: var(--dfnpanel-target-bg);
+        outline: 5px solid var(--dfnpanel-target-outline);
+    }
+    to {
+        color: var(--a-normal-text);
+        background-color: transparent;
+        outline: transparent;
+    }
+}
 </style>
-<style>/* Boilerplate: style-dfn-panel */
-:root {
-    --dfnpanel-bg: #ddd;
-    --dfnpanel-text: var(--text);
+<style>/* Boilerplate: style-idl-highlighting */
+pre.idl.highlight {
+    background: var(--borderedblock-bg, var(--def-bg));
 }
-@media (prefers-color-scheme: dark) {
-    :root {
-        --dfnpanel-bg: #222;
-        --dfnpanel-text: var(--text);
-    }
-}
-.dfn-panel {
-    position: absolute;
-    z-index: 35;
-    width: 20em;
-    width: 300px;
-    height: auto;
-    max-height: 500px;
-    overflow: auto;
-    padding: 0.5em 0.75em;
-    font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
-    background: var(--dfnpanel-bg);
-    color: var(--dfnpanel-text);
-    border: outset 0.2em;
-    white-space: normal; /* in case it's moved into a pre */
-}
-.dfn-panel:not(.on) { display: none; }
-.dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
-.dfn-panel > b { display: block; }
-.dfn-panel a { color: var(--dfnpanel-text); }
-.dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
-.dfn-panel > b + b { margin-top: 0.25em; }
-.dfn-panel ul { padding: 0 0 0 1em; list-style: none; }
-.dfn-panel li a {
-    white-space: pre;
-    display: inline-block;
-    max-width: calc(300px - 1.5em - 1em);
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.dfn-panel.activated {
-    display: inline-block;
-    position: fixed;
-    left: .5em;
-    bottom: 2em;
-    margin: 0 auto;
-    max-width: calc(100vw - 1.5em - .4em - .5em);
-    max-height: 30vh;
-}
-
-.dfn-paneled[role="button"] { cursor: pointer; }
 </style>
 <style>/* Boilerplate: style-issues */
 a[href].issue-return {
@@ -519,8 +544,40 @@ a[href].issue-return {
     margin-bottom: 0;
 }
 </style>
-<style>/* Boilerplate: style-selflinks */
+<style>/* Boilerplate: style-ref-hints */
+:root {
+    --ref-hint-bg: #ddd;
+    --ref-hint-text: var(--text);
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ref-hint-bg: #222;
+        --ref-hint-text: var(--text);
+    }
+}
 
+.ref-hint {
+    display: inline-block;
+    position: absolute;
+    z-index: 35;
+    width: 20em;
+    width: 300px;
+    height: auto;
+    max-height: 500px;
+    overflow: auto;
+    padding: 0.5em 0.5em;
+    font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
+    background: var(--ref-hint-bg);
+    color: var(--ref-hint-text);
+    border: outset 0.2em;
+    white-space: normal; /* in case it's moved into a pre */
+}
+
+.ref-hint * { margin: 0; padding: 0; text-indent: 0; }
+
+.ref-hint ul { padding: 0 0 0 1em; list-style: none; }
+</style>
+<style>/* Boilerplate: style-selflinks */
 :root {
     --selflink-text: white;
     --selflink-bg: gray;
@@ -580,14 +637,6 @@ a.self-link::before            { content: "¶"; }
 dfn > a.self-link::before      { content: "#"; }
 </style>
 <style>/* Boilerplate: style-syntax-highlighting */
-
-            pre.idl.highlight {
-                background: var(--borderedblock-bg, var(--def-bg));
-            }
-            
-</style>
-<style>/* Boilerplate: style-syntax-highlighting */
-
 code.highlight { padding: .1em; border-radius: .3em; }
 pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
 
@@ -644,7 +693,6 @@ c-[vc] { color: #0077aa } /* Name.Variable.Class */
 c-[vg] { color: #0077aa } /* Name.Variable.Global */
 c-[vi] { color: #0077aa } /* Name.Variable.Instance */
 c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
-
 
 @media (prefers-color-scheme: dark) {
     .highlight:not(.idl) { background: rgba(255, 255, 255, .05); }
@@ -720,21 +768,43 @@ D50 2deg illuminant, L in [0,100], a and b in [-128, 128]
 4 = lab(85,5,15)
 5 = lab(85,-10,-50)
 6 = lab(85,35,-15)
+
+For darkmode:
+0 = oklab(50%   0%  108%)
+1 = oklab(50% -51%   51%)
+2 = oklab(50% -64%  -20%)
+3 = oklab(50%   6%   19%)
+4 = oklab(50% -12%  -64%)
+5 = oklab(50%  44%  -19%)  
+6 = oklab(50% 102%   38%)
 */
-var { cursor: pointer; }
-var.selected0 { background-color: #F4D200; box-shadow: 0 0 0 2px #F4D200; }
-var.selected1 { background-color: #FF87A2; box-shadow: 0 0 0 2px #FF87A2; }
-var.selected2 { background-color: #96E885; box-shadow: 0 0 0 2px #96E885; }
-var.selected3 { background-color: #3EEED2; box-shadow: 0 0 0 2px #3EEED2; }
-var.selected4 { background-color: #EACFB6; box-shadow: 0 0 0 2px #EACFB6; }
-var.selected5 { background-color: #82DDFF; box-shadow: 0 0 0 2px #82DDFF; }
-var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
+
+[data-algorithm] var { cursor: pointer; }
+var[data-var-color] { background-color: var(--var-bg); box-shadow: 0 0 0 2px var(--var-bg); }
+
+var[data-var-color] { --var-bg: #F4D200; }
+var[data-var-color="1"] { --var-bg: #FF87A2; }
+var[data-var-color="2"] { --var-bg: #96E885; }
+var[data-var-color="3"] { --var-bg: #3EEED2; }
+var[data-var-color="4"] { --var-bg: #EACFB6; }
+var[data-var-color="5"] { --var-bg: #82DDFF; }
+var[data-var-color="6"] { --var-vg: #FFBCF2; }
+
+@media (prefers-color-scheme: dark) {
+	var[data-var-color] { --var-bg: #bc1a00; }
+	var[data-var-color="1"] { --var-bg: #007f00; }
+	var[data-var-color="2"] { --var-bg: #008698; }
+	var[data-var-color="3"] { --var-bg: #7f5b2b; }
+	var[data-var-color="4"] { --var-bg: #004df3; }
+	var[data-var-color="5"] { --var-bg: #a1248a; }
+	var[data-var-color="6"] { --var-vg: #ff0000; }
+}
 </style>
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">WebXR Plane Detection Module</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-11-11">11 November 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2025-05-21">21 May 2025</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
@@ -744,7 +814,9 @@ var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
       <dt>Issue Tracking:
       <dd><a href="https://github.com/immersive-web/real-world-geometry/issues/">GitHub</a>
       <dt class="editor">Editor:
-      <dd class="editor p-author h-card vcard" data-editor-id="114482"><a class="p-name fn u-email email" href="mailto:bialpio@google.com">Piotr Bialecki</a> (<a class="p-org org" href="http://google.com/">Google</a>)
+      <dd class="editor p-author h-card vcard" data-editor-id="114716"><a class="p-name fn u-email email" href="mailto:alcooper@google.com">Alex Cooper</a> (<a class="p-org org" href="http://google.com/">Google</a>)
+      <dt class="editor">Former Editor:
+      <dd class="editor p-author h-card vcard" data-editor-id="114482"><a class="p-name fn u-email email" href="mailto:bialpio@google.com">Piotr Bialecki</a> (<a class="p-org org" href="https://google.com/">Google</a>)
       <dt>Participate:
       <dd><a href="https://github.com/immersive-web/real-world-geometry/issues/new">File an issue</a> (<a href="https://github.com/immersive-web/real-world-geometry/issues">open issues</a>)
       <dd><a href="https://lists.w3.org/Archives/Public/public-immersive-web/">Mailing list archive</a>
@@ -753,7 +825,7 @@ var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
     </div>
    </details>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="https://www.w3.org/policies/#copyright">Copyright</a> © 2023 <a href="https://www.w3.org/">World Wide Web Consortium</a>. <abbr title="World Wide Web Consortium">W3C</abbr><sup>®</sup> <a href="https://www.w3.org/policies/#Legal_Disclaimer">liability</a>, <a href="https://www.w3.org/policies/#W3C_Trademarks">trademark</a> and <a href="https://www.w3.org/copyright/software-license/" rel="license" title="W3C Software and Document License">permissive document license</a> rules apply. </p>
+   <p class="copyright" data-fill-with="copyright"><a href="https://www.w3.org/policies/#copyright">Copyright</a> © 2025 <a href="https://www.w3.org/">World Wide Web Consortium</a>. <abbr title="World Wide Web Consortium">W3C</abbr><sup>®</sup> <a href="https://www.w3.org/policies/#Legal_Disclaimer">liability</a>, <a href="https://www.w3.org/policies/#W3C_Trademarks">trademark</a> and <a href="https://www.w3.org/copyright/software-license/" rel="license" title="W3C Software and Document License">permissive document license</a> rules apply. </p>
    <hr title="Separator for header">
   </div>
   <div class="p-summary" data-fill-with="abstract">
@@ -816,7 +888,7 @@ var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
    <section class="non-normative"></section>
    <h2 class="heading settled" data-level="2" id="anchor-feature-initialization"><span class="secno">2. </span><span class="content">Initialization</span><a class="self-link" href="#anchor-feature-initialization"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="anchor-feature-descriptor"><span class="secno">2.1. </span><span class="content">Feature descriptor</span><a class="self-link" href="#anchor-feature-descriptor"></a></h3>
-   <p>In order for the applications to signal their interest in using plane detection during a session, the session must be requested with appropriate <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#feature-descriptor" id="ref-for-feature-descriptor">feature descriptor</a>. The string <dfn data-dfn-type="dfn" data-noexport id="plane-detection">plane-detection<a class="self-link" href="#plane-detection"></a></dfn> is introduced by this module as a new valid feature descriptor for plane detection feature.</p>
+   <p>In order for the applications to signal their interest in using plane detection during a session, the session must be requested with appropriate <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#feature-descriptor" id="ref-for-feature-descriptor">feature descriptor</a>. The string <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="plane-detection">plane-detection</dfn> is introduced by this module as a new valid feature descriptor for plane detection feature.</p>
    <p>A device is <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#capable-of-supporting" id="ref-for-capable-of-supporting">capable of supporting</a> the plane-detection feature if the device’s tracking system exposes a <a data-link-type="dfn" href="#native-plane-detection" id="ref-for-native-plane-detection">native plane detection</a> capability. The <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device">inline XR device</a> MUST NOT be treated as <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#capable-of-supporting" id="ref-for-capable-of-supporting①">capable of supporting</a> the plane-detection feature.</p>
    <p>When a session is created with plane-detection feature enabled, the <a data-link-type="dfn" href="#update-planes" id="ref-for-update-planes">update planes</a> algorithm MUST be added to the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xrsession-list-of-frame-updates" id="ref-for-xrsession-list-of-frame-updates">list of frame updates</a> of that session.</p>
    <div class="example" id="example-b5d27a11">
@@ -918,7 +990,7 @@ The <code class="idl"><a data-link-type="idl" href="#dom-xrsession-initiateroomc
      <li data-md>
       <p>Set <var>result</var>’s <a data-link-type="dfn" href="#xrplane-native-entity" id="ref-for-xrplane-native-entity">native entity</a> to <var>native plane</var>.</p>
      <li data-md>
-      <p>Set <var>result</var>’s <code class="idl"><a data-link-type="idl" href="#dom-xrplane-planespace" id="ref-for-dom-xrplane-planespace⑤">planeSpace</a></code> to a new <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#xrspace" id="ref-for-xrspace③">XRSpace</a></code> object created with <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xrspace-session" id="ref-for-xrspace-session">session</a> set to <var>frame</var>’s <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#dom-xrframe-session" id="ref-for-dom-xrframe-session①">session</a></code> and <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xrspace-native-origin" id="ref-for-xrspace-native-origin①">native origin</a> set to track <var>native plane</var>’s native origin.</p>
+      <p>Set <var>result</var>’s <code class="idl"><a data-link-type="idl" href="#dom-xrplane-planespace" id="ref-for-dom-xrplane-planespace⑤">planeSpace</a></code> to a new <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#xrspace" id="ref-for-xrspace③">XRSpace</a></code> object created with <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xrspace-session" id="ref-for-xrspace-session">session</a> set to <var>frame</var>’s <code class="idl"><a data-link-type="idl" data-refhint-key="https://immersive-web.github.io/webxr/#dom-xrframe-session" href="https://immersive-web.github.io/webxr/#dom-xrframe-session" id="ref-for-dom-xrframe-session①">session</a></code> and <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xrspace-native-origin" id="ref-for-xrspace-native-origin①">native origin</a> set to track <var>native plane</var>’s native origin.</p>
      <li data-md>
       <p>Invoke <a data-link-type="dfn" href="#update-plane-object" id="ref-for-update-plane-object①">update plane object</a> algorithm with <var>result</var>, <var>native plane</var>, and <var>frame</var>.</p>
      <li data-md>
@@ -1043,7 +1115,7 @@ The <code class="idl"><a data-link-type="idl" href="#dom-xrsession-initiateroomc
     like this: </p>
    <p class="note" role="note">Note, this is an informative note.</p>
   </div>
-<script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script>
+  <script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
@@ -1114,7 +1186,7 @@ The <code class="idl"><a data-link-type="idl" href="#dom-xrsession-initiateroomc
      <li><span class="dfn-paneled" id="8af2159c">active</span>
      <li><span class="dfn-paneled" id="d6345ec4">capable of supporting</span>
      <li><span class="dfn-paneled" id="348f253b">feature descriptor</span>
-     <li><span class="dfn-paneled" id="3f381e58">inline xr device</span>
+     <li><span class="dfn-paneled" id="3f381e58">inline XR device</span>
      <li><span class="dfn-paneled" id="7f1caef1">list of frame updates</span>
      <li><span class="dfn-paneled" id="a03d6806">native origin</span>
      <li><span class="dfn-paneled" id="1776cb35">quantization</span>
@@ -1122,7 +1194,7 @@ The <code class="idl"><a data-link-type="idl" href="#dom-xrsession-initiateroomc
      <li><span class="dfn-paneled" id="7c7eccf9①">session <small>(for XRFrame)</small></span>
      <li><span class="dfn-paneled" id="5c4e891e">session <small>(for XRSpace)</small></span>
      <li><span class="dfn-paneled" id="c6a33477">time</span>
-     <li><span class="dfn-paneled" id="4da8c16e">xr device</span>
+     <li><span class="dfn-paneled" id="4da8c16e">XR device</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -1172,365 +1244,8 @@ The <code class="idl"><a data-link-type="idl" href="#dom-xrsession-initiateroomc
 };
 
 </pre>
-<script>/* Boilerplate: script-dfn-panel */
-"use strict";
-{
-    const dfnsJson = window.dfnsJson || {};
-
-    function genDfnPanel({dfnID, url, dfnText, refSections, external}) {
-        return mk.aside({
-            class: "dfn-panel",
-            id: `infopanel-for-${dfnID}`,
-            "data-for": dfnID,
-            "aria-labelled-by":`infopaneltitle-for-${dfnID}`,
-            },
-            mk.span({id:`infopaneltitle-for-${dfnID}`, style:"display:none"},
-                `Info about the '${dfnText}' ${external?"external":""} reference.`),
-            mk.a({href:url}, url),
-            mk.b({}, "Referenced in:"),
-            mk.ul({},
-                ...refSections.map(section=>
-                    mk.li({},
-                        ...section.refs.map((ref, refI)=>
-                            [
-                                mk.a({
-                                    href: `#${ref.id}`
-                                    },
-                                    (refI == 0) ? section.title : `(${refI + 1})`
-                                ),
-                                " ",
-                            ]
-                        ),
-                    ),
-                ),
-            ),
-        );
-    }
-
-    function genAllDfnPanels() {
-        for(const panelData of Object.values(window.dfnpanelData)) {
-            const dfnID = panelData.dfnID;
-            const dfn = document.getElementById(dfnID);
-            if(!dfn) {
-                console.log(`Can't find dfn#${dfnID}.`, panelData);
-            } else {
-                const panel = genDfnPanel(panelData);
-                append(document.body, panel);
-                insertDfnPopupAction(dfn, panel)
-            }
-        }
-    }
-
-    document.addEventListener("DOMContentLoaded", ()=>{
-        genAllDfnPanels();
-
-        // Add popup behavior to all dfns to show the corresponding dfn-panel.
-        var dfns = queryAll('.dfn-paneled');
-        for(let dfn of dfns) { ; }
-
-        document.body.addEventListener("click", (e) => {
-            // If not handled already, just hide all dfn panels.
-            hideAllDfnPanels();
-        });
-    })
-
-
-    function hideAllDfnPanels() {
-        // Turn off any currently "on" or "activated" panels.
-        queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(el=>hideDfnPanel(el));
-    }
-
-    function showDfnPanel(dfnPanel, dfn) {
-        hideAllDfnPanels(); // Only display one at this time.
-        dfn.setAttribute("aria-expanded", "true");
-        dfnPanel.classList.add("on");
-        dfnPanel.style.left = "5px";
-        dfnPanel.style.top = "0px";
-        const panelRect = dfnPanel.getBoundingClientRect();
-        const panelWidth = panelRect.right - panelRect.left;
-        if (panelRect.right > document.body.scrollWidth) {
-            // Panel's overflowing the screen.
-            // Just drop it below the dfn and flip it rightward instead.
-            // This still wont' fix things if the screen is *really* wide,
-            // but fixing that's a lot harder without 'anchor()'.
-            dfnPanel.style.top = "1.5em";
-            dfnPanel.style.left = "auto";
-            dfnPanel.style.right = "0px";
-        }
-    }
-
-    function pinDfnPanel(dfnPanel) {
-        // Switch it to "activated" state, which pins it.
-        dfnPanel.classList.add("activated");
-        dfnPanel.style.left = null;
-        dfnPanel.style.top = null;
-    }
-
-    function hideDfnPanel(dfnPanel, dfn) {
-        if(!dfn) {
-            dfn = document.getElementById(dfnPanel.getAttribute("data-for"));
-        }
-        dfn.setAttribute("aria-expanded", "false")
-        dfnPanel.classList.remove("on");
-        dfnPanel.classList.remove("activated");
-    }
-
-    function toggleDfnPanel(dfnPanel, dfn) {
-        if(dfnPanel.classList.contains("on")) {
-            hideDfnPanel(dfnPanel, dfn);
-        } else {
-            showDfnPanel(dfnPanel, dfn);
-        }
-    }
-
-    function insertDfnPopupAction(dfn, dfnPanel) {
-        // Find dfn panel
-        const panelWrapper = document.createElement('span');
-        panelWrapper.appendChild(dfnPanel);
-        panelWrapper.style.position = "relative";
-        panelWrapper.style.height = "0px";
-        dfn.insertAdjacentElement("afterend", panelWrapper);
-        dfn.setAttribute('role', 'button');
-        dfn.setAttribute('aria-expanded', 'false')
-        dfn.tabIndex = 0;
-        dfn.classList.add('has-dfn-panel');
-        dfn.addEventListener('click', (event) => {
-            showDfnPanel(dfnPanel, dfn);
-            event.stopPropagation();
-        });
-        dfn.addEventListener('keypress', (event) => {
-            const kc = event.keyCode;
-            // 32->Space, 13->Enter
-            if(kc == 32 || kc == 13) {
-                toggleDfnPanel(dfnPanel, dfn);
-                event.stopPropagation();
-                event.preventDefault();
-            }
-        });
-
-        dfnPanel.addEventListener('click', (event) => {
-            if (event.target.nodeName == 'A') {
-                pinDfnPanel(dfnPanel);
-            }
-            event.stopPropagation();
-        });
-
-        dfnPanel.addEventListener('keydown', (event) => {
-            if(event.keyCode == 27) { // Escape key
-                hideDfnPanel(dfnPanel, dfn);
-                event.stopPropagation();
-                event.preventDefault();
-            }
-        })
-    }
-}
-</script>
-<script>/* Boilerplate: script-dfn-panel */
-"use strict";
-{
-    const dfnsJson = window.dfnsJson || {};
-
-    function genDfnPanel({dfnID, url, dfnText, refSections, external}) {
-        return mk.aside({
-            class: "dfn-panel",
-            id: `infopanel-for-${dfnID}`,
-            "data-for": dfnID,
-            "aria-labelled-by":`infopaneltitle-for-${dfnID}`,
-            },
-            mk.span({id:`infopaneltitle-for-${dfnID}`, style:"display:none"},
-                `Info about the '${dfnText}' ${external?"external":""} reference.`),
-            mk.a({href:url}, url),
-            mk.b({}, "Referenced in:"),
-            mk.ul({},
-                ...refSections.map(section=>
-                    mk.li({},
-                        ...section.refs.map((ref, refI)=>
-                            [
-                                mk.a({
-                                    href: `#${ref.id}`
-                                    },
-                                    (refI == 0) ? section.title : `(${refI + 1})`
-                                ),
-                                " ",
-                            ]
-                        ),
-                    ),
-                ),
-            ),
-        );
-    }
-
-    function genAllDfnPanels() {
-        for(const panelData of Object.values(window.dfnpanelData)) {
-            const dfnID = panelData.dfnID;
-            const dfn = document.getElementById(dfnID);
-            if(!dfn) {
-                console.log(`Can't find dfn#${dfnID}.`, panelData);
-            } else {
-                const panel = genDfnPanel(panelData);
-                append(document.body, panel);
-                insertDfnPopupAction(dfn, panel)
-            }
-        }
-    }
-
-    document.addEventListener("DOMContentLoaded", ()=>{
-        genAllDfnPanels();
-
-        // Add popup behavior to all dfns to show the corresponding dfn-panel.
-        var dfns = queryAll('.dfn-paneled');
-        for(let dfn of dfns) { ; }
-
-        document.body.addEventListener("click", (e) => {
-            // If not handled already, just hide all dfn panels.
-            hideAllDfnPanels();
-        });
-    })
-
-
-    function hideAllDfnPanels() {
-        // Turn off any currently "on" or "activated" panels.
-        queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(el=>hideDfnPanel(el));
-    }
-
-    function showDfnPanel(dfnPanel, dfn) {
-        hideAllDfnPanels(); // Only display one at this time.
-        dfn.setAttribute("aria-expanded", "true");
-        dfnPanel.classList.add("on");
-        dfnPanel.style.left = "5px";
-        dfnPanel.style.top = "0px";
-        const panelRect = dfnPanel.getBoundingClientRect();
-        const panelWidth = panelRect.right - panelRect.left;
-        if (panelRect.right > document.body.scrollWidth) {
-            // Panel's overflowing the screen.
-            // Just drop it below the dfn and flip it rightward instead.
-            // This still wont' fix things if the screen is *really* wide,
-            // but fixing that's a lot harder without 'anchor()'.
-            dfnPanel.style.top = "1.5em";
-            dfnPanel.style.left = "auto";
-            dfnPanel.style.right = "0px";
-        }
-    }
-
-    function pinDfnPanel(dfnPanel) {
-        // Switch it to "activated" state, which pins it.
-        dfnPanel.classList.add("activated");
-        dfnPanel.style.left = null;
-        dfnPanel.style.top = null;
-    }
-
-    function hideDfnPanel(dfnPanel, dfn) {
-        if(!dfn) {
-            dfn = document.getElementById(dfnPanel.getAttribute("data-for"));
-        }
-        dfn.setAttribute("aria-expanded", "false")
-        dfnPanel.classList.remove("on");
-        dfnPanel.classList.remove("activated");
-    }
-
-    function toggleDfnPanel(dfnPanel, dfn) {
-        if(dfnPanel.classList.contains("on")) {
-            hideDfnPanel(dfnPanel, dfn);
-        } else {
-            showDfnPanel(dfnPanel, dfn);
-        }
-    }
-
-    function insertDfnPopupAction(dfn, dfnPanel) {
-        // Find dfn panel
-        const panelWrapper = document.createElement('span');
-        panelWrapper.appendChild(dfnPanel);
-        panelWrapper.style.position = "relative";
-        panelWrapper.style.height = "0px";
-        dfn.insertAdjacentElement("afterend", panelWrapper);
-        dfn.setAttribute('role', 'button');
-        dfn.setAttribute('aria-expanded', 'false')
-        dfn.tabIndex = 0;
-        dfn.classList.add('has-dfn-panel');
-        dfn.addEventListener('click', (event) => {
-            showDfnPanel(dfnPanel, dfn);
-            event.stopPropagation();
-        });
-        dfn.addEventListener('keypress', (event) => {
-            const kc = event.keyCode;
-            // 32->Space, 13->Enter
-            if(kc == 32 || kc == 13) {
-                toggleDfnPanel(dfnPanel, dfn);
-                event.stopPropagation();
-                event.preventDefault();
-            }
-        });
-
-        dfnPanel.addEventListener('click', (event) => {
-            if (event.target.nodeName == 'A') {
-                pinDfnPanel(dfnPanel);
-            }
-            event.stopPropagation();
-        });
-
-        dfnPanel.addEventListener('keydown', (event) => {
-            if(event.keyCode == 27) { // Escape key
-                hideDfnPanel(dfnPanel, dfn);
-                event.stopPropagation();
-                event.preventDefault();
-            }
-        })
-    }
-}
-</script>
-<script>/* Boilerplate: script-dfn-panel-json */
-window.dfnpanelData = {};
-window.dfnpanelData['5cce610d'] = {"dfnID": "5cce610d", "url": "https://drafts.fxtf.org/geometry-1/#dompointreadonly", "dfnText": "DOMPointReadOnly", "refSections": [{"refs": [{"id": "ref-for-dompointreadonly"}], "title": "3.2. XRPlane"}], "external": true};
-window.dfnpanelData['0e9f636b'] = {"dfnID": "0e9f636b", "url": "https://w3c.github.io/hr-time/#dom-domhighrestimestamp", "dfnText": "DOMHighResTimeStamp", "refSections": [{"refs": [{"id": "ref-for-dom-domhighrestimestamp"}], "title": "3.2. XRPlane"}], "external": true};
-window.dfnpanelData['8855a9aa'] = {"dfnID": "8855a9aa", "url": "https://webidl.spec.whatwg.org/#idl-DOMString", "dfnText": "DOMString", "refSections": [{"refs": [{"id": "ref-for-idl-DOMString"}], "title": "3.2. XRPlane"}], "external": true};
-window.dfnpanelData['dcf5fafa'] = {"dfnID": "dcf5fafa", "url": "https://webidl.spec.whatwg.org/#idl-frozen-array", "dfnText": "FrozenArray", "refSections": [{"refs": [{"id": "ref-for-idl-frozen-array"}], "title": "3.2. XRPlane"}], "external": true};
-window.dfnpanelData['797018a7'] = {"dfnID": "797018a7", "url": "https://webidl.spec.whatwg.org/#invalidstateerror", "dfnText": "InvalidStateError", "refSections": [{"refs": [{"id": "ref-for-invalidstateerror"}], "title": "4.1. XRPlaneSet"}], "external": true};
-window.dfnpanelData['bdbd19d1'] = {"dfnID": "bdbd19d1", "url": "https://webidl.spec.whatwg.org/#idl-promise", "dfnText": "Promise", "refSections": [{"refs": [{"id": "ref-for-idl-promise"}], "title": "4.1. XRPlaneSet"}], "external": true};
-window.dfnpanelData['a5c91173'] = {"dfnID": "a5c91173", "url": "https://webidl.spec.whatwg.org/#SameObject", "dfnText": "SameObject", "refSections": [{"refs": [{"id": "ref-for-SameObject"}], "title": "3.2. XRPlane"}], "external": true};
-window.dfnpanelData['5f90bbfb'] = {"dfnID": "5f90bbfb", "url": "https://webidl.spec.whatwg.org/#idl-undefined", "dfnText": "undefined", "refSections": [{"refs": [{"id": "ref-for-idl-undefined"}], "title": "4.1. XRPlaneSet"}], "external": true};
-window.dfnpanelData['7a030114'] = {"dfnID": "7a030114", "url": "https://immersive-web.github.io/webxr/#xrframe", "dfnText": "XRFrame", "refSections": [{"refs": [{"id": "ref-for-xrframe"}, {"id": "ref-for-xrframe\u2460"}, {"id": "ref-for-xrframe\u2461"}, {"id": "ref-for-xrframe\u2462"}, {"id": "ref-for-xrframe\u2463"}], "title": "4.1. XRPlaneSet"}, {"refs": [{"id": "ref-for-xrframe\u2464"}], "title": "5.1. Native plane detection"}], "external": true};
-window.dfnpanelData['b23556e5'] = {"dfnID": "b23556e5", "url": "https://immersive-web.github.io/webxr/#xrsession", "dfnText": "XRSession", "refSections": [{"refs": [{"id": "ref-for-xrsession"}, {"id": "ref-for-xrsession\u2460"}, {"id": "ref-for-xrsession\u2461"}, {"id": "ref-for-xrsession\u2462"}], "title": "4.1. XRPlaneSet"}], "external": true};
-window.dfnpanelData['0b566548'] = {"dfnID": "0b566548", "url": "https://immersive-web.github.io/webxr/#xrspace", "dfnText": "XRSpace", "refSections": [{"refs": [{"id": "ref-for-xrspace"}, {"id": "ref-for-xrspace\u2460"}, {"id": "ref-for-xrspace\u2461"}], "title": "3.2. XRPlane"}, {"refs": [{"id": "ref-for-xrspace\u2462"}], "title": "4.1. XRPlaneSet"}], "external": true};
-window.dfnpanelData['8f974556'] = {"dfnID": "8f974556", "url": "https://immersive-web.github.io/webxr/#xrsystem", "dfnText": "XRSystem", "refSections": [{"refs": [{"id": "ref-for-xrsystem"}, {"id": "ref-for-xrsystem\u2460"}], "title": "3.2. XRPlane"}], "external": true};
-window.dfnpanelData['a9d2b73a'] = {"dfnID": "a9d2b73a", "url": "https://immersive-web.github.io/webxr/#dom-xrframe-getpose", "dfnText": "getPose(space, baseSpace)", "refSections": [{"refs": [{"id": "ref-for-dom-xrframe-getpose"}], "title": "3.2. XRPlane"}], "external": true};
-window.dfnpanelData['7c7eccf9'] = {"dfnID": "7c7eccf9", "url": "https://immersive-web.github.io/webxr/#dom-xrframe-session", "dfnText": "session", "refSections": [{"refs": [{"id": "ref-for-dom-xrframe-session"}, {"id": "ref-for-dom-xrframe-session\u2460"}], "title": "4.1. XRPlaneSet"}], "external": true};
-window.dfnpanelData['8385b9c7'] = {"dfnID": "8385b9c7", "url": "https://immersive-web.github.io/anchors/#xr-anchor", "dfnText": "XRAnchor", "refSections": [{"refs": [{"id": "ref-for-xr-anchor"}], "title": "5.1. Native plane detection"}], "external": true};
-window.dfnpanelData['8af2159c'] = {"dfnID": "8af2159c", "url": "https://immersive-web.github.io/webxr/#xrframe-active", "dfnText": "active", "refSections": [{"refs": [{"id": "ref-for-xrframe-active"}], "title": "4.1. XRPlaneSet"}], "external": true};
-window.dfnpanelData['d6345ec4'] = {"dfnID": "d6345ec4", "url": "https://immersive-web.github.io/webxr/#capable-of-supporting", "dfnText": "capable of supporting", "refSections": [{"refs": [{"id": "ref-for-capable-of-supporting"}, {"id": "ref-for-capable-of-supporting\u2460"}], "title": "2.1. Feature descriptor"}], "external": true};
-window.dfnpanelData['348f253b'] = {"dfnID": "348f253b", "url": "https://immersive-web.github.io/webxr/#feature-descriptor", "dfnText": "feature descriptor", "refSections": [{"refs": [{"id": "ref-for-feature-descriptor"}], "title": "2.1. Feature descriptor"}], "external": true};
-window.dfnpanelData['3f381e58'] = {"dfnID": "3f381e58", "url": "https://immersive-web.github.io/webxr/#inline-xr-device", "dfnText": "inline xr device", "refSections": [{"refs": [{"id": "ref-for-inline-xr-device"}], "title": "2.1. Feature descriptor"}], "external": true};
-window.dfnpanelData['7f1caef1'] = {"dfnID": "7f1caef1", "url": "https://immersive-web.github.io/webxr/#xrsession-list-of-frame-updates", "dfnText": "list of frame updates", "refSections": [{"refs": [{"id": "ref-for-xrsession-list-of-frame-updates"}], "title": "2.1. Feature descriptor"}], "external": true};
-window.dfnpanelData['a03d6806'] = {"dfnID": "a03d6806", "url": "https://immersive-web.github.io/webxr/#xrspace-native-origin", "dfnText": "native origin", "refSections": [{"refs": [{"id": "ref-for-xrspace-native-origin"}], "title": "3.2. XRPlane"}, {"refs": [{"id": "ref-for-xrspace-native-origin\u2460"}], "title": "4.1. XRPlaneSet"}, {"refs": [{"id": "ref-for-xrspace-native-origin\u2461"}], "title": "5.1. Native plane detection"}], "external": true};
-window.dfnpanelData['1776cb35'] = {"dfnID": "1776cb35", "url": "https://immersive-web.github.io/webxr/#quantization", "dfnText": "quantization", "refSections": [{"refs": [{"id": "ref-for-quantization"}, {"id": "ref-for-quantization\u2460"}], "title": "6. Privacy & Security Considerations"}], "external": true};
-window.dfnpanelData['5a3f05c6'] = {"dfnID": "5a3f05c6", "url": "https://immersive-web.github.io/webxr/#rounding", "dfnText": "rounding", "refSections": [{"refs": [{"id": "ref-for-rounding"}], "title": "6. Privacy & Security Considerations"}], "external": true};
-window.dfnpanelData['7c7eccf9'] = {"dfnID": "7c7eccf9", "url": "https://immersive-web.github.io/webxr/#dom-xrframe-session", "dfnText": "session (for XRFrame)", "refSections": [{"refs": [{"id": "ref-for-dom-xrframe-session"}, {"id": "ref-for-dom-xrframe-session\u2460"}], "title": "4.1. XRPlaneSet"}], "external": true};
-window.dfnpanelData['5c4e891e'] = {"dfnID": "5c4e891e", "url": "https://immersive-web.github.io/webxr/#xrspace-session", "dfnText": "session (for XRSpace)", "refSections": [{"refs": [{"id": "ref-for-xrspace-session"}], "title": "4.1. XRPlaneSet"}], "external": true};
-window.dfnpanelData['c6a33477'] = {"dfnID": "c6a33477", "url": "https://immersive-web.github.io/webxr/#xrframe-time", "dfnText": "time", "refSections": [{"refs": [{"id": "ref-for-xrframe-time"}, {"id": "ref-for-xrframe-time\u2460"}], "title": "4.1. XRPlaneSet"}, {"refs": [{"id": "ref-for-xrframe-time\u2461"}], "title": "5.1. Native plane detection"}], "external": true};
-window.dfnpanelData['4da8c16e'] = {"dfnID": "4da8c16e", "url": "https://immersive-web.github.io/webxr/#xrsession-xr-device", "dfnText": "xr device", "refSections": [{"refs": [{"id": "ref-for-xrsession-xr-device"}], "title": "4.1. XRPlaneSet"}], "external": true};
-window.dfnpanelData['enumdef-xrplaneorientation'] = {"dfnID": "enumdef-xrplaneorientation", "url": "#enumdef-xrplaneorientation", "dfnText": "XRPlaneOrientation", "refSections": [{"refs": [{"id": "ref-for-enumdef-xrplaneorientation"}], "title": "3.2. XRPlane"}], "external": false};
-window.dfnpanelData['dom-xrplaneorientation-horizontal'] = {"dfnID": "dom-xrplaneorientation-horizontal", "url": "#dom-xrplaneorientation-horizontal", "dfnText": "\"horizontal\"", "refSections": [{"refs": [{"id": "ref-for-dom-xrplaneorientation-horizontal"}], "title": "3.1. XRPlaneOrientation"}, {"refs": [{"id": "ref-for-dom-xrplaneorientation-horizontal\u2460"}], "title": "3.2. XRPlane"}, {"refs": [{"id": "ref-for-dom-xrplaneorientation-horizontal\u2461"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['dom-xrplaneorientation-vertical'] = {"dfnID": "dom-xrplaneorientation-vertical", "url": "#dom-xrplaneorientation-vertical", "dfnText": "\"vertical\"", "refSections": [{"refs": [{"id": "ref-for-dom-xrplaneorientation-vertical"}], "title": "3.1. XRPlaneOrientation"}, {"refs": [{"id": "ref-for-dom-xrplaneorientation-vertical\u2460"}], "title": "3.2. XRPlane"}, {"refs": [{"id": "ref-for-dom-xrplaneorientation-vertical\u2461"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['xrplane'] = {"dfnID": "xrplane", "url": "#xrplane", "dfnText": "XRPlane", "refSections": [{"refs": [{"id": "ref-for-xrplane"}, {"id": "ref-for-xrplane\u2460"}, {"id": "ref-for-xrplane\u2461"}, {"id": "ref-for-xrplane\u2462"}], "title": "3.2. XRPlane"}, {"refs": [{"id": "ref-for-xrplane\u2463"}, {"id": "ref-for-xrplane\u2464"}, {"id": "ref-for-xrplane\u2465"}, {"id": "ref-for-xrplane\u2466"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['dom-xrplane-planespace'] = {"dfnID": "dom-xrplane-planespace", "url": "#dom-xrplane-planespace", "dfnText": "planeSpace", "refSections": [{"refs": [{"id": "ref-for-dom-xrplane-planespace"}, {"id": "ref-for-dom-xrplane-planespace\u2460"}, {"id": "ref-for-dom-xrplane-planespace\u2461"}, {"id": "ref-for-dom-xrplane-planespace\u2462"}, {"id": "ref-for-dom-xrplane-planespace\u2463"}], "title": "3.2. XRPlane"}, {"refs": [{"id": "ref-for-dom-xrplane-planespace\u2464"}], "title": "4.1. XRPlaneSet"}, {"refs": [{"id": "ref-for-dom-xrplane-planespace\u2465"}], "title": "6. Privacy & Security Considerations"}], "external": false};
-window.dfnpanelData['dom-xrplane-polygon'] = {"dfnID": "dom-xrplane-polygon", "url": "#dom-xrplane-polygon", "dfnText": "polygon", "refSections": [{"refs": [{"id": "ref-for-dom-xrplane-polygon"}], "title": "3.2. XRPlane"}, {"refs": [{"id": "ref-for-dom-xrplane-polygon\u2460"}, {"id": "ref-for-dom-xrplane-polygon\u2461"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['dom-xrplane-orientation'] = {"dfnID": "dom-xrplane-orientation", "url": "#dom-xrplane-orientation", "dfnText": "orientation", "refSections": [{"refs": [{"id": "ref-for-dom-xrplane-orientation"}], "title": "3.2. XRPlane"}, {"refs": [{"id": "ref-for-dom-xrplane-orientation\u2460"}, {"id": "ref-for-dom-xrplane-orientation\u2461"}, {"id": "ref-for-dom-xrplane-orientation\u2462"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['dom-xrplane-lastchangedtime'] = {"dfnID": "dom-xrplane-lastchangedtime", "url": "#dom-xrplane-lastchangedtime", "dfnText": "lastChangedTime", "refSections": [{"refs": [{"id": "ref-for-dom-xrplane-lastchangedtime"}, {"id": "ref-for-dom-xrplane-lastchangedtime\u2460"}], "title": "3.2. XRPlane"}, {"refs": [{"id": "ref-for-dom-xrplane-lastchangedtime\u2461"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['dom-xrplane-semanticlabel'] = {"dfnID": "dom-xrplane-semanticlabel", "url": "#dom-xrplane-semanticlabel", "dfnText": "semanticLabel", "refSections": [{"refs": [{"id": "ref-for-dom-xrplane-semanticlabel"}], "title": "3.2. XRPlane"}, {"refs": [{"id": "ref-for-dom-xrplane-semanticlabel\u2460"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['xrplane-native-entity'] = {"dfnID": "xrplane-native-entity", "url": "#xrplane-native-entity", "dfnText": "native entity", "refSections": [{"refs": [{"id": "ref-for-xrplane-native-entity"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['xrplane-frame'] = {"dfnID": "xrplane-frame", "url": "#xrplane-frame", "dfnText": "frame", "refSections": [{"refs": [{"id": "ref-for-xrplane-frame"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['semantic-label'] = {"dfnID": "semantic-label", "url": "#semantic-label", "dfnText": "semantic label", "refSections": [{"refs": [{"id": "ref-for-semantic-label"}, {"id": "ref-for-semantic-label\u2460"}], "title": "3.2. XRPlane"}, {"refs": [{"id": "ref-for-semantic-label\u2461"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['xrplaneset'] = {"dfnID": "xrplaneset", "url": "#xrplaneset", "dfnText": "XRPlaneSet", "refSections": [{"refs": [{"id": "ref-for-xrplaneset"}, {"id": "ref-for-xrplaneset\u2460"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['dom-xrframe-detectedplanes'] = {"dfnID": "dom-xrframe-detectedplanes", "url": "#dom-xrframe-detectedplanes", "dfnText": "detectedPlanes", "refSections": [{"refs": [{"id": "ref-for-dom-xrframe-detectedplanes"}, {"id": "ref-for-dom-xrframe-detectedplanes\u2460"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['dom-xrsession-initiateroomcapture'] = {"dfnID": "dom-xrsession-initiateroomcapture", "url": "#dom-xrsession-initiateroomcapture", "dfnText": "initiateRoomCapture", "refSections": [{"refs": [{"id": "ref-for-dom-xrsession-initiateroomcapture"}, {"id": "ref-for-dom-xrsession-initiateroomcapture\u2460"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['xrsession-set-of-tracked-planes'] = {"dfnID": "xrsession-set-of-tracked-planes", "url": "#xrsession-set-of-tracked-planes", "dfnText": "set of tracked planes", "refSections": [{"refs": [{"id": "ref-for-xrsession-set-of-tracked-planes"}, {"id": "ref-for-xrsession-set-of-tracked-planes\u2460"}, {"id": "ref-for-xrsession-set-of-tracked-planes\u2461"}, {"id": "ref-for-xrsession-set-of-tracked-planes\u2462"}, {"id": "ref-for-xrsession-set-of-tracked-planes\u2463"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['update-planes'] = {"dfnID": "update-planes", "url": "#update-planes", "dfnText": "update planes", "refSections": [{"refs": [{"id": "ref-for-update-planes"}], "title": "2.1. Feature descriptor"}, {"refs": [{"id": "ref-for-update-planes\u2460"}], "title": "4.1. XRPlaneSet"}, {"refs": [{"id": "ref-for-update-planes\u2461"}], "title": "6. Privacy & Security Considerations"}], "external": false};
-window.dfnpanelData['create-plane-object'] = {"dfnID": "create-plane-object", "url": "#create-plane-object", "dfnText": "create plane object", "refSections": [{"refs": [{"id": "ref-for-create-plane-object"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['correspond-to'] = {"dfnID": "correspond-to", "url": "#correspond-to", "dfnText": "correspond to", "refSections": [{"refs": [{"id": "ref-for-correspond-to"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['update-plane-object'] = {"dfnID": "update-plane-object", "url": "#update-plane-object", "dfnText": "update plane object", "refSections": [{"refs": [{"id": "ref-for-update-plane-object"}, {"id": "ref-for-update-plane-object\u2460"}], "title": "4.1. XRPlaneSet"}, {"refs": [{"id": "ref-for-update-plane-object\u2461"}], "title": "6. Privacy & Security Considerations"}], "external": false};
-window.dfnpanelData['native-plane-detection'] = {"dfnID": "native-plane-detection", "url": "#native-plane-detection", "dfnText": "native plane detection", "refSections": [{"refs": [{"id": "ref-for-native-plane-detection"}], "title": "2.1. Feature descriptor"}, {"refs": [{"id": "ref-for-native-plane-detection\u2460"}], "title": "4.1. XRPlaneSet"}], "external": false};
-window.dfnpanelData['native-plane-objects'] = {"dfnID": "native-plane-objects", "url": "#native-plane-objects", "dfnText": "native plane objects", "refSections": [{"refs": [{"id": "ref-for-native-plane-objects"}, {"id": "ref-for-native-plane-objects\u2460"}], "title": "4.1. XRPlaneSet"}], "external": false};
-</script>
 <script>/* Boilerplate: script-dom-helper */
+"use strict";
 function query(sel) { return document.querySelector(sel); }
 
 function queryAll(sel) { return [...document.querySelectorAll(sel)]; }
@@ -1724,103 +1439,784 @@ function parseHTML(markup) {
 		el.innerHTML = markup;
 		return el.content;
 	}
+}</script>
+<script>/* Boilerplate: script-dfn-panel */
+"use strict";
+{
+let dfnPanelData = {
+"0b566548": {"dfnID":"0b566548","dfnText":"XRSpace","external":true,"refSections":[{"refs":[{"id":"ref-for-xrspace"},{"id":"ref-for-xrspace\u2460"},{"id":"ref-for-xrspace\u2461"}],"title":"3.2. XRPlane"},{"refs":[{"id":"ref-for-xrspace\u2462"}],"title":"4.1. XRPlaneSet"}],"url":"https://immersive-web.github.io/webxr/#xrspace"},
+"0e9f636b": {"dfnID":"0e9f636b","dfnText":"DOMHighResTimeStamp","external":true,"refSections":[{"refs":[{"id":"ref-for-dom-domhighrestimestamp"}],"title":"3.2. XRPlane"}],"url":"https://w3c.github.io/hr-time/#dom-domhighrestimestamp"},
+"1776cb35": {"dfnID":"1776cb35","dfnText":"quantization","external":true,"refSections":[{"refs":[{"id":"ref-for-quantization"},{"id":"ref-for-quantization\u2460"}],"title":"6. Privacy & Security Considerations"}],"url":"https://immersive-web.github.io/webxr/#quantization"},
+"348f253b": {"dfnID":"348f253b","dfnText":"feature descriptor","external":true,"refSections":[{"refs":[{"id":"ref-for-feature-descriptor"}],"title":"2.1. Feature descriptor"}],"url":"https://immersive-web.github.io/webxr/#feature-descriptor"},
+"3f381e58": {"dfnID":"3f381e58","dfnText":"inline XR device","external":true,"refSections":[{"refs":[{"id":"ref-for-inline-xr-device"}],"title":"2.1. Feature descriptor"}],"url":"https://immersive-web.github.io/webxr/#inline-xr-device"},
+"4da8c16e": {"dfnID":"4da8c16e","dfnText":"XR device","external":true,"refSections":[{"refs":[{"id":"ref-for-xrsession-xr-device"}],"title":"4.1. XRPlaneSet"}],"url":"https://immersive-web.github.io/webxr/#xrsession-xr-device"},
+"5a3f05c6": {"dfnID":"5a3f05c6","dfnText":"rounding","external":true,"refSections":[{"refs":[{"id":"ref-for-rounding"}],"title":"6. Privacy & Security Considerations"}],"url":"https://immersive-web.github.io/webxr/#rounding"},
+"5c4e891e": {"dfnID":"5c4e891e","dfnText":"session (for XRSpace)","external":true,"refSections":[{"refs":[{"id":"ref-for-xrspace-session"}],"title":"4.1. XRPlaneSet"}],"url":"https://immersive-web.github.io/webxr/#xrspace-session"},
+"5cce610d": {"dfnID":"5cce610d","dfnText":"DOMPointReadOnly","external":true,"refSections":[{"refs":[{"id":"ref-for-dompointreadonly"}],"title":"3.2. XRPlane"}],"url":"https://drafts.fxtf.org/geometry-1/#dompointreadonly"},
+"5f90bbfb": {"dfnID":"5f90bbfb","dfnText":"undefined","external":true,"refSections":[{"refs":[{"id":"ref-for-idl-undefined"}],"title":"4.1. XRPlaneSet"}],"url":"https://webidl.spec.whatwg.org/#idl-undefined"},
+"797018a7": {"dfnID":"797018a7","dfnText":"InvalidStateError","external":true,"refSections":[{"refs":[{"id":"ref-for-invalidstateerror"}],"title":"4.1. XRPlaneSet"}],"url":"https://webidl.spec.whatwg.org/#invalidstateerror"},
+"7a030114": {"dfnID":"7a030114","dfnText":"XRFrame","external":true,"refSections":[{"refs":[{"id":"ref-for-xrframe"},{"id":"ref-for-xrframe\u2460"},{"id":"ref-for-xrframe\u2461"},{"id":"ref-for-xrframe\u2462"},{"id":"ref-for-xrframe\u2463"}],"title":"4.1. XRPlaneSet"},{"refs":[{"id":"ref-for-xrframe\u2464"}],"title":"5.1. Native plane detection"}],"url":"https://immersive-web.github.io/webxr/#xrframe"},
+"7c7eccf9": {"dfnID":"7c7eccf9","dfnText":"session (for XRFrame)","external":true,"refSections":[{"refs":[{"id":"ref-for-dom-xrframe-session"},{"id":"ref-for-dom-xrframe-session\u2460"}],"title":"4.1. XRPlaneSet"}],"url":"https://immersive-web.github.io/webxr/#dom-xrframe-session"},
+"7f1caef1": {"dfnID":"7f1caef1","dfnText":"list of frame updates","external":true,"refSections":[{"refs":[{"id":"ref-for-xrsession-list-of-frame-updates"}],"title":"2.1. Feature descriptor"}],"url":"https://immersive-web.github.io/webxr/#xrsession-list-of-frame-updates"},
+"8385b9c7": {"dfnID":"8385b9c7","dfnText":"XRAnchor","external":true,"refSections":[{"refs":[{"id":"ref-for-xr-anchor"}],"title":"5.1. Native plane detection"}],"url":"https://immersive-web.github.io/anchors/#xr-anchor"},
+"8855a9aa": {"dfnID":"8855a9aa","dfnText":"DOMString","external":true,"refSections":[{"refs":[{"id":"ref-for-idl-DOMString"}],"title":"3.2. XRPlane"}],"url":"https://webidl.spec.whatwg.org/#idl-DOMString"},
+"8af2159c": {"dfnID":"8af2159c","dfnText":"active","external":true,"refSections":[{"refs":[{"id":"ref-for-xrframe-active"}],"title":"4.1. XRPlaneSet"}],"url":"https://immersive-web.github.io/webxr/#xrframe-active"},
+"8f974556": {"dfnID":"8f974556","dfnText":"XRSystem","external":true,"refSections":[{"refs":[{"id":"ref-for-xrsystem"},{"id":"ref-for-xrsystem\u2460"}],"title":"3.2. XRPlane"}],"url":"https://immersive-web.github.io/webxr/#xrsystem"},
+"a03d6806": {"dfnID":"a03d6806","dfnText":"native origin","external":true,"refSections":[{"refs":[{"id":"ref-for-xrspace-native-origin"}],"title":"3.2. XRPlane"},{"refs":[{"id":"ref-for-xrspace-native-origin\u2460"}],"title":"4.1. XRPlaneSet"},{"refs":[{"id":"ref-for-xrspace-native-origin\u2461"}],"title":"5.1. Native plane detection"}],"url":"https://immersive-web.github.io/webxr/#xrspace-native-origin"},
+"a5c91173": {"dfnID":"a5c91173","dfnText":"SameObject","external":true,"refSections":[{"refs":[{"id":"ref-for-SameObject"}],"title":"3.2. XRPlane"}],"url":"https://webidl.spec.whatwg.org/#SameObject"},
+"a9d2b73a": {"dfnID":"a9d2b73a","dfnText":"getPose(space, baseSpace)","external":true,"refSections":[{"refs":[{"id":"ref-for-dom-xrframe-getpose"}],"title":"3.2. XRPlane"}],"url":"https://immersive-web.github.io/webxr/#dom-xrframe-getpose"},
+"b23556e5": {"dfnID":"b23556e5","dfnText":"XRSession","external":true,"refSections":[{"refs":[{"id":"ref-for-xrsession"},{"id":"ref-for-xrsession\u2460"},{"id":"ref-for-xrsession\u2461"},{"id":"ref-for-xrsession\u2462"}],"title":"4.1. XRPlaneSet"}],"url":"https://immersive-web.github.io/webxr/#xrsession"},
+"bdbd19d1": {"dfnID":"bdbd19d1","dfnText":"Promise","external":true,"refSections":[{"refs":[{"id":"ref-for-idl-promise"}],"title":"4.1. XRPlaneSet"}],"url":"https://webidl.spec.whatwg.org/#idl-promise"},
+"c6a33477": {"dfnID":"c6a33477","dfnText":"time","external":true,"refSections":[{"refs":[{"id":"ref-for-xrframe-time"},{"id":"ref-for-xrframe-time\u2460"}],"title":"4.1. XRPlaneSet"},{"refs":[{"id":"ref-for-xrframe-time\u2461"}],"title":"5.1. Native plane detection"}],"url":"https://immersive-web.github.io/webxr/#xrframe-time"},
+"correspond-to": {"dfnID":"correspond-to","dfnText":"correspond to","external":false,"refSections":[{"refs":[{"id":"ref-for-correspond-to"}],"title":"4.1. XRPlaneSet"}],"url":"#correspond-to"},
+"create-plane-object": {"dfnID":"create-plane-object","dfnText":"create plane object","external":false,"refSections":[{"refs":[{"id":"ref-for-create-plane-object"}],"title":"4.1. XRPlaneSet"}],"url":"#create-plane-object"},
+"d6345ec4": {"dfnID":"d6345ec4","dfnText":"capable of supporting","external":true,"refSections":[{"refs":[{"id":"ref-for-capable-of-supporting"},{"id":"ref-for-capable-of-supporting\u2460"}],"title":"2.1. Feature descriptor"}],"url":"https://immersive-web.github.io/webxr/#capable-of-supporting"},
+"dcf5fafa": {"dfnID":"dcf5fafa","dfnText":"FrozenArray","external":true,"refSections":[{"refs":[{"id":"ref-for-idl-frozen-array"}],"title":"3.2. XRPlane"}],"url":"https://webidl.spec.whatwg.org/#idl-frozen-array"},
+"dom-xrframe-detectedplanes": {"dfnID":"dom-xrframe-detectedplanes","dfnText":"detectedPlanes","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-xrframe-detectedplanes"},{"id":"ref-for-dom-xrframe-detectedplanes\u2460"}],"title":"4.1. XRPlaneSet"}],"url":"#dom-xrframe-detectedplanes"},
+"dom-xrplane-lastchangedtime": {"dfnID":"dom-xrplane-lastchangedtime","dfnText":"lastChangedTime","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-xrplane-lastchangedtime"},{"id":"ref-for-dom-xrplane-lastchangedtime\u2460"}],"title":"3.2. XRPlane"},{"refs":[{"id":"ref-for-dom-xrplane-lastchangedtime\u2461"}],"title":"4.1. XRPlaneSet"}],"url":"#dom-xrplane-lastchangedtime"},
+"dom-xrplane-orientation": {"dfnID":"dom-xrplane-orientation","dfnText":"orientation","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-xrplane-orientation"}],"title":"3.2. XRPlane"},{"refs":[{"id":"ref-for-dom-xrplane-orientation\u2460"},{"id":"ref-for-dom-xrplane-orientation\u2461"},{"id":"ref-for-dom-xrplane-orientation\u2462"}],"title":"4.1. XRPlaneSet"}],"url":"#dom-xrplane-orientation"},
+"dom-xrplane-planespace": {"dfnID":"dom-xrplane-planespace","dfnText":"planeSpace","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-xrplane-planespace"},{"id":"ref-for-dom-xrplane-planespace\u2460"},{"id":"ref-for-dom-xrplane-planespace\u2461"},{"id":"ref-for-dom-xrplane-planespace\u2462"},{"id":"ref-for-dom-xrplane-planespace\u2463"}],"title":"3.2. XRPlane"},{"refs":[{"id":"ref-for-dom-xrplane-planespace\u2464"}],"title":"4.1. XRPlaneSet"},{"refs":[{"id":"ref-for-dom-xrplane-planespace\u2465"}],"title":"6. Privacy & Security Considerations"}],"url":"#dom-xrplane-planespace"},
+"dom-xrplane-polygon": {"dfnID":"dom-xrplane-polygon","dfnText":"polygon","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-xrplane-polygon"}],"title":"3.2. XRPlane"},{"refs":[{"id":"ref-for-dom-xrplane-polygon\u2460"},{"id":"ref-for-dom-xrplane-polygon\u2461"}],"title":"4.1. XRPlaneSet"}],"url":"#dom-xrplane-polygon"},
+"dom-xrplane-semanticlabel": {"dfnID":"dom-xrplane-semanticlabel","dfnText":"semanticLabel","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-xrplane-semanticlabel"}],"title":"3.2. XRPlane"},{"refs":[{"id":"ref-for-dom-xrplane-semanticlabel\u2460"}],"title":"4.1. XRPlaneSet"}],"url":"#dom-xrplane-semanticlabel"},
+"dom-xrplaneorientation-horizontal": {"dfnID":"dom-xrplaneorientation-horizontal","dfnText":"\"horizontal\"","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-xrplaneorientation-horizontal"}],"title":"3.1. XRPlaneOrientation"},{"refs":[{"id":"ref-for-dom-xrplaneorientation-horizontal\u2460"}],"title":"3.2. XRPlane"},{"refs":[{"id":"ref-for-dom-xrplaneorientation-horizontal\u2461"}],"title":"4.1. XRPlaneSet"}],"url":"#dom-xrplaneorientation-horizontal"},
+"dom-xrplaneorientation-vertical": {"dfnID":"dom-xrplaneorientation-vertical","dfnText":"\"vertical\"","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-xrplaneorientation-vertical"}],"title":"3.1. XRPlaneOrientation"},{"refs":[{"id":"ref-for-dom-xrplaneorientation-vertical\u2460"}],"title":"3.2. XRPlane"},{"refs":[{"id":"ref-for-dom-xrplaneorientation-vertical\u2461"}],"title":"4.1. XRPlaneSet"}],"url":"#dom-xrplaneorientation-vertical"},
+"dom-xrsession-initiateroomcapture": {"dfnID":"dom-xrsession-initiateroomcapture","dfnText":"initiateRoomCapture","external":false,"refSections":[{"refs":[{"id":"ref-for-dom-xrsession-initiateroomcapture"},{"id":"ref-for-dom-xrsession-initiateroomcapture\u2460"}],"title":"4.1. XRPlaneSet"}],"url":"#dom-xrsession-initiateroomcapture"},
+"enumdef-xrplaneorientation": {"dfnID":"enumdef-xrplaneorientation","dfnText":"XRPlaneOrientation","external":false,"refSections":[{"refs":[{"id":"ref-for-enumdef-xrplaneorientation"}],"title":"3.2. XRPlane"}],"url":"#enumdef-xrplaneorientation"},
+"native-plane-detection": {"dfnID":"native-plane-detection","dfnText":"native plane detection","external":false,"refSections":[{"refs":[{"id":"ref-for-native-plane-detection"}],"title":"2.1. Feature descriptor"},{"refs":[{"id":"ref-for-native-plane-detection\u2460"}],"title":"4.1. XRPlaneSet"}],"url":"#native-plane-detection"},
+"native-plane-objects": {"dfnID":"native-plane-objects","dfnText":"native plane objects","external":false,"refSections":[{"refs":[{"id":"ref-for-native-plane-objects"},{"id":"ref-for-native-plane-objects\u2460"}],"title":"4.1. XRPlaneSet"}],"url":"#native-plane-objects"},
+"plane-detection": {"dfnID":"plane-detection","dfnText":"plane-detection","external":false,"refSections":[],"url":"#plane-detection"},
+"semantic-label": {"dfnID":"semantic-label","dfnText":"semantic label","external":false,"refSections":[{"refs":[{"id":"ref-for-semantic-label"},{"id":"ref-for-semantic-label\u2460"}],"title":"3.2. XRPlane"},{"refs":[{"id":"ref-for-semantic-label\u2461"}],"title":"4.1. XRPlaneSet"}],"url":"#semantic-label"},
+"update-plane-object": {"dfnID":"update-plane-object","dfnText":"update plane object","external":false,"refSections":[{"refs":[{"id":"ref-for-update-plane-object"},{"id":"ref-for-update-plane-object\u2460"}],"title":"4.1. XRPlaneSet"},{"refs":[{"id":"ref-for-update-plane-object\u2461"}],"title":"6. Privacy & Security Considerations"}],"url":"#update-plane-object"},
+"update-planes": {"dfnID":"update-planes","dfnText":"update planes","external":false,"refSections":[{"refs":[{"id":"ref-for-update-planes"}],"title":"2.1. Feature descriptor"},{"refs":[{"id":"ref-for-update-planes\u2460"}],"title":"4.1. XRPlaneSet"},{"refs":[{"id":"ref-for-update-planes\u2461"}],"title":"6. Privacy & Security Considerations"}],"url":"#update-planes"},
+"xrplane": {"dfnID":"xrplane","dfnText":"XRPlane","external":false,"refSections":[{"refs":[{"id":"ref-for-xrplane"},{"id":"ref-for-xrplane\u2460"},{"id":"ref-for-xrplane\u2461"},{"id":"ref-for-xrplane\u2462"}],"title":"3.2. XRPlane"},{"refs":[{"id":"ref-for-xrplane\u2463"},{"id":"ref-for-xrplane\u2464"},{"id":"ref-for-xrplane\u2465"},{"id":"ref-for-xrplane\u2466"}],"title":"4.1. XRPlaneSet"}],"url":"#xrplane"},
+"xrplane-frame": {"dfnID":"xrplane-frame","dfnText":"frame","external":false,"refSections":[{"refs":[{"id":"ref-for-xrplane-frame"}],"title":"4.1. XRPlaneSet"}],"url":"#xrplane-frame"},
+"xrplane-native-entity": {"dfnID":"xrplane-native-entity","dfnText":"native entity","external":false,"refSections":[{"refs":[{"id":"ref-for-xrplane-native-entity"}],"title":"4.1. XRPlaneSet"}],"url":"#xrplane-native-entity"},
+"xrplaneset": {"dfnID":"xrplaneset","dfnText":"XRPlaneSet","external":false,"refSections":[{"refs":[{"id":"ref-for-xrplaneset"},{"id":"ref-for-xrplaneset\u2460"}],"title":"4.1. XRPlaneSet"}],"url":"#xrplaneset"},
+"xrsession-set-of-tracked-planes": {"dfnID":"xrsession-set-of-tracked-planes","dfnText":"set of tracked planes","external":false,"refSections":[{"refs":[{"id":"ref-for-xrsession-set-of-tracked-planes"},{"id":"ref-for-xrsession-set-of-tracked-planes\u2460"},{"id":"ref-for-xrsession-set-of-tracked-planes\u2461"},{"id":"ref-for-xrsession-set-of-tracked-planes\u2462"},{"id":"ref-for-xrsession-set-of-tracked-planes\u2463"}],"title":"4.1. XRPlaneSet"}],"url":"#xrsession-set-of-tracked-planes"},
+};
+
+document.addEventListener("DOMContentLoaded", ()=>{
+    genAllDfnPanels();
+
+    document.body.addEventListener("click", (e) => {
+        // If not handled already, just hide all dfn panels.
+        hideAllDfnPanels();
+    });
+});
+
+window.addEventListener("resize", () => {
+    // Pin any visible dfn panel
+    queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(el=>positionDfnPanel(el));
+});
+
+function genAllDfnPanels() {
+    for(const panelData of Object.values(dfnPanelData)) {
+        const dfnID = panelData.dfnID;
+        const dfn = document.getElementById(dfnID);
+        if(!dfn) {
+            console.log(`Can't find dfn#${dfnID}.`, panelData);
+            continue;
+        }
+        dfn.panelData = panelData;
+        insertDfnPopupAction(dfn);
+    }
+}
+
+function genDfnPanel(dfn, { dfnID, url, dfnText, refSections, external }) {
+    const dfnPanel = mk.aside({
+        class: "dfn-panel on",
+        id: `infopanel-for-${dfnID}`,
+        "data-for": dfnID,
+        "aria-labelled-by":`infopaneltitle-for-${dfnID}`,
+        },
+        mk.span({id:`infopaneltitle-for-${dfnID}`, style:"display:none"},
+            `Info about the '${dfnText}' ${external?"external":""} reference.`),
+        mk.a({href:url, class:"dfn-link"}, url),
+        refSections.length == 0 ? [] :
+            mk.b({}, "Referenced in:"),
+            mk.ul({},
+                ...refSections.map(section=>
+                    mk.li({},
+                        ...section.refs.map((ref, refI)=>
+                            [
+                                mk.a({ href: `#${ref.id}` },
+                                    (refI == 0) ? section.title : `(${refI + 1})`
+                                ),
+                                " ",
+                            ]
+                        ),
+                    ),
+                ),
+            ),
+        genLinkingSyntaxes(dfn),
+    );
+
+    dfnPanel.addEventListener('click', (event) => {
+        if (event.target.nodeName == 'A') {
+            scrollToTargetAndHighlight(event);
+            pinDfnPanel(dfnPanel);
+        }
+        event.stopPropagation();
+        refocusOnTarget(event);
+    });
+    dfnPanel.addEventListener('keydown', (event) => {
+        if(event.keyCode == 27) { // Escape key
+            hideDfnPanel({dfnPanel});
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    });
+
+    dfnPanel.dfn = dfn;
+    dfn.dfnPanel = dfnPanel;
+    return dfnPanel;
+}
+
+
+
+function hideAllDfnPanels() {
+    // Delete the currently-active dfn panel.
+    queryAll(".dfn-panel").forEach(dfnPanel=>hideDfnPanel({dfnPanel}));
+}
+
+function showDfnPanel(dfn) {
+    hideAllDfnPanels(); // Only display one at a time.
+
+    dfn.setAttribute("aria-expanded", "true");
+
+    const dfnPanel = genDfnPanel(dfn, dfn.panelData);
+
+    // Give the dfn a unique tabindex, and then
+    // give all the tabbable panel bits successive indexes.
+    let tabIndex = 100;
+    dfn.tabIndex = tabIndex++;
+    const tabbable = dfnPanel.querySelectorAll(":is(a, button)");
+    for (const el of tabbable) {
+        el.tabIndex = tabIndex++;
+    }
+
+    append(document.body, dfnPanel);
+    positionDfnPanel(dfnPanel);
+}
+
+function positionDfnPanel(dfnPanel) {
+    const dfn = dfnPanel.dfn;
+    const dfnPos = getBounds(dfn);
+    dfnPanel.style.top = dfnPos.bottom + "px";
+    dfnPanel.style.left = dfnPos.left + "px";
+
+    const panelPos = dfnPanel.getBoundingClientRect();
+    const panelMargin = 8;
+    const maxRight = document.body.parentNode.clientWidth - panelMargin;
+    if (panelPos.right > maxRight) {
+        const overflowAmount = panelPos.right - maxRight;
+        const newLeft = Math.max(panelMargin, dfnPos.left - overflowAmount);
+        dfnPanel.style.left = newLeft + "px";
+    }
+}
+
+function pinDfnPanel(dfnPanel) {
+    // Switch it to "activated" state, which pins it.
+    dfnPanel.classList.add("activated");
+    dfnPanel.style.position = "fixed";
+    dfnPanel.style.left = null;
+    dfnPanel.style.top = null;
+}
+
+function hideDfnPanel({dfn, dfnPanel}) {
+    if(!dfnPanel) dfnPanel = dfn.dfnPanel;
+    if(!dfn) dfn = dfnPanel.dfn;
+    dfn.dfnPanel = undefined;
+    dfnPanel.dfn = undefined;
+    dfn.setAttribute("aria-expanded", "false");
+    dfn.tabIndex = undefined;
+    dfnPanel.remove()
+}
+
+function toggleDfnPanel(dfn) {
+    if(dfn.dfnPanel) {
+        hideDfnPanel(dfn);
+    } else {
+        showDfnPanel(dfn);
+    }
+}
+
+function insertDfnPopupAction(dfn) {
+    dfn.setAttribute('role', 'button');
+    dfn.setAttribute('aria-expanded', 'false')
+    dfn.tabIndex = 0;
+    dfn.classList.add('has-dfn-panel');
+    dfn.addEventListener('click', (event) => {
+        toggleDfnPanel(dfn);
+        event.stopPropagation();
+    });
+    dfn.addEventListener('keypress', (event) => {
+        const kc = event.keyCode;
+        // 32->Space, 13->Enter
+        if(kc == 32 || kc == 13) {
+            toggleDfnPanel(dfn);
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    });
+}
+
+function refocusOnTarget(event) {
+    const target = event.target;
+    setTimeout(() => {
+        // Refocus on the event.target element.
+        // This is needed after browser scrolls to the destination.
+        target.focus();
+    });
+}
+
+// TODO: shared util
+// Returns the root-level absolute position {left and top} of element.
+function getBounds(el, relativeTo=document.body) {
+    const relativeRect = relativeTo.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const top = elRect.top - relativeRect.top;
+    const left = elRect.left - relativeRect.left;
+    return {
+        top,
+        left,
+        bottom: top + elRect.height,
+        right: left + elRect.width,
+    }
+}
+
+function scrollToTargetAndHighlight(event) {
+    let hash = event.target.hash;
+    if (hash) {
+        hash = decodeURIComponent(hash.substring(1));
+        const dest = document.getElementById(hash);
+        if (dest) {
+            dest.classList.add('highlighted');
+            setTimeout(() => dest.classList.remove('highlighted'), 1000);
+        }
+    }
+}
+
+// Functions, divided by link type, that wrap an autolink's
+// contents with the appropriate outer syntax.
+// Alternately, a string naming another type they format
+// the same as.
+function needsFor(type) {
+    switch(type) {
+        case "descriptor":
+        case "value":
+        case "element-attr":
+        case "attr-value":
+        case "element-state":
+        case "method":
+        case "constructor":
+        case "argument":
+        case "attribute":
+        case "const":
+        case "dict-member":
+        case "event":
+        case "enum-value":
+        case "stringifier":
+        case "serializer":
+        case "iterator":
+        case "maplike":
+        case "setlike":
+        case "state":
+        case "mode":
+        case "context":
+        case "facet": return true;
+
+        default: return false;
+    }
+}
+function refusesFor(type) {
+    switch(type) {
+        case "property":
+        case "element":
+        case "interface":
+        case "namespace":
+        case "callback":
+        case "dictionary":
+        case "enum":
+        case "exception":
+        case "typedef":
+        case "http-header":
+        case "permission": return true;
+
+        default: return false;
+    }
+}
+function linkFormatterFromType(type) {
+    switch(type) {
+        case 'scheme':
+        case 'permission':
+        case 'dfn': return (text) => `[=${text}=]`;
+
+        case 'abstract-op': return (text) => `[\$${text}\$]`;
+
+        case 'function':
+        case 'at-rule':
+        case 'selector':
+        case 'value': return (text) => `''${text}''`;
+
+        case 'http-header': return (text) => `[:${text}:]`;
+
+        case 'interface':
+        case 'constructor':
+        case 'method':
+        case 'argument':
+        case 'attribute':
+        case 'callback':
+        case 'dictionary':
+        case 'dict-member':
+        case 'enum':
+        case 'enum-value':
+        case 'exception':
+        case 'const':
+        case 'typedef':
+        case 'stringifier':
+        case 'serializer':
+        case 'iterator':
+        case 'maplike':
+        case 'setlike':
+        case 'extended-attribute':
+        case 'event':
+        case 'idl': return (text) => `{{${text}}}`;
+
+        case 'element-state':
+        case 'element-attr':
+        case 'attr-value':
+        case 'element': return (element) => `<{${element}}>`;
+
+        case 'grammar': return (text) => `${text} (within a <pre class=prod>)`;
+
+        case 'type': return (text)=> `<<${text}>>`;
+
+        case 'descriptor':
+        case 'property': return (text) => `'${text}'`;
+
+        default: return;
+    };
+};
+
+function genLinkingSyntaxes(dfn) {
+    if(dfn.tagName != "DFN") return;
+
+    const type = dfn.getAttribute('data-dfn-type');
+    if(!type) {
+        console.log(`<dfn> doesn't have a data-dfn-type:`, dfn);
+        return [];
+    }
+
+    // Return a function that wraps link text based on the type
+    const linkFormatter = linkFormatterFromType(type);
+    if(!linkFormatter) {
+        console.log(`<dfn> has an unknown data-dfn-type:`, dfn);
+        return [];
+    }
+
+    let ltAlts;
+    if(dfn.hasAttribute('data-lt')) {
+        ltAlts = dfn.getAttribute('data-lt')
+            .split("|")
+            .map(x=>x.trim());
+    } else {
+        ltAlts = [dfn.textContent.trim()];
+    }
+    if(type == "type") {
+        // lt of "<foo>", but "foo" is the interior;
+        // <<foo/bar>> is how you write it with a for,
+        // not <foo/<bar>> or whatever.
+        for(var i = 0; i < ltAlts.length; i++) {
+            const lt = ltAlts[i];
+            const match = /<(.*)>/.exec(lt);
+            if(match) { ltAlts[i] = match[1]; }
+        }
+    }
+
+    let forAlts;
+    if(dfn.hasAttribute('data-dfn-for')) {
+        forAlts = dfn.getAttribute('data-dfn-for')
+            .split(",")
+            .map(x=>x.trim());
+    } else {
+        forAlts = [''];
+    }
+
+    let linkingSyntaxes = [];
+    if(!needsFor(type)) {
+        for(const lt of ltAlts) {
+            linkingSyntaxes.push(linkFormatter(lt));
+        }
+    }
+    if(!refusesFor(type)) {
+        for(const f of forAlts) {
+            linkingSyntaxes.push(linkFormatter(`${f}/${ltAlts[0]}`))
+        }
+    }
+    return [
+        mk.b({}, 'Possible linking syntaxes:'),
+        mk.ul({},
+            ...linkingSyntaxes.map(link => {
+                const copyLink = async () =>
+                    await navigator.clipboard.writeText(link);
+                return mk.li({},
+                    mk.div({ class: 'link-item' },
+                        mk.button({
+                            class: 'copy-icon', title: 'Copy',
+                            type: 'button',
+                            _onclick: copyLink,
+                            tabindex: 0,
+                        }, mk.span({ class: 'icon' }) ),
+                        mk.span({}, link)
+                    )
+                );
+            })
+        )
+    ];
+}
+}
+</script>
+<script>/* Boilerplate: script-ref-hints */
+"use strict";
+{
+let refsData = {
+"#correspond-to": {"displayText":"correspond to","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"correspond to","type":"dfn","url":"#correspond-to"},
+"#create-plane-object": {"displayText":"create plane object","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"create plane object","type":"dfn","url":"#create-plane-object"},
+"#dom-xrframe-detectedplanes": {"displayText":"detectedPlanes","export":true,"for_":["XRFrame"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"detectedPlanes","type":"attribute","url":"#dom-xrframe-detectedplanes"},
+"#dom-xrplane-lastchangedtime": {"displayText":"lastChangedTime","export":true,"for_":["XRPlane"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"lastChangedTime","type":"attribute","url":"#dom-xrplane-lastchangedtime"},
+"#dom-xrplane-orientation": {"displayText":"orientation","export":true,"for_":["XRPlane"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"orientation","type":"attribute","url":"#dom-xrplane-orientation"},
+"#dom-xrplane-planespace": {"displayText":"planeSpace","export":true,"for_":["XRPlane"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"planeSpace","type":"attribute","url":"#dom-xrplane-planespace"},
+"#dom-xrplane-polygon": {"displayText":"polygon","export":true,"for_":["XRPlane"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"polygon","type":"attribute","url":"#dom-xrplane-polygon"},
+"#dom-xrplane-semanticlabel": {"displayText":"semanticLabel","export":true,"for_":["XRPlane"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"semanticLabel","type":"attribute","url":"#dom-xrplane-semanticlabel"},
+"#dom-xrplaneorientation-horizontal": {"displayText":"\"horizontal\"","export":true,"for_":["XRPlaneOrientation"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"\"horizontal\"","type":"enum-value","url":"#dom-xrplaneorientation-horizontal"},
+"#dom-xrplaneorientation-vertical": {"displayText":"\"vertical\"","export":true,"for_":["XRPlaneOrientation"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"\"vertical\"","type":"enum-value","url":"#dom-xrplaneorientation-vertical"},
+"#dom-xrsession-initiateroomcapture": {"displayText":"initiateRoomCapture()","export":true,"for_":["XRSession"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"initiateRoomCapture()","type":"method","url":"#dom-xrsession-initiateroomcapture"},
+"#enumdef-xrplaneorientation": {"displayText":"XRPlaneOrientation","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"XRPlaneOrientation","type":"enum","url":"#enumdef-xrplaneorientation"},
+"#native-plane-detection": {"displayText":"native plane detection","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"native plane detection","type":"dfn","url":"#native-plane-detection"},
+"#native-plane-objects": {"displayText":"native plane objects","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"native plane objects","type":"dfn","url":"#native-plane-objects"},
+"#semantic-label": {"displayText":"semantic label","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"semantic label","type":"dfn","url":"#semantic-label"},
+"#update-plane-object": {"displayText":"update plane object","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"update plane object","type":"dfn","url":"#update-plane-object"},
+"#update-planes": {"displayText":"update planes","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"update planes","type":"dfn","url":"#update-planes"},
+"#xrplane": {"displayText":"XRPlane","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"XRPlane","type":"interface","url":"#xrplane"},
+"#xrplane-frame": {"displayText":"frame","export":true,"for_":["XRPlane"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"frame","type":"dfn","url":"#xrplane-frame"},
+"#xrplane-native-entity": {"displayText":"native entity","export":true,"for_":["XRPlane"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"native entity","type":"dfn","url":"#xrplane-native-entity"},
+"#xrplaneset": {"displayText":"XRPlaneSet","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"XRPlaneSet","type":"interface","url":"#xrplaneset"},
+"#xrsession-set-of-tracked-planes": {"displayText":"set of tracked planes","export":true,"for_":["XRSession"],"level":"1","normative":true,"shortname":"webxr-plane-detection","spec":"webxr-plane-detection-1","status":"local","text":"set of tracked planes","type":"dfn","url":"#xrsession-set-of-tracked-planes"},
+"https://drafts.fxtf.org/geometry-1/#dompointreadonly": {"displayText":"DOMPointReadOnly","export":true,"for_":[],"level":"1","normative":true,"shortname":"geometry","spec":"geometry-1","status":"current","text":"DOMPointReadOnly","type":"interface","url":"https://drafts.fxtf.org/geometry-1/#dompointreadonly"},
+"https://immersive-web.github.io/anchors/#xr-anchor": {"displayText":"XRAnchor","export":true,"for_":[],"level":"","normative":true,"shortname":"webxr anchors module","spec":"webxr anchors module","status":"anchor-block","text":"XRAnchor","type":"interface","url":"https://immersive-web.github.io/anchors/#xr-anchor"},
+"https://immersive-web.github.io/webxr/#capable-of-supporting": {"displayText":"capable of supporting","export":true,"for_":[],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"capable of supporting","type":"dfn","url":"https://immersive-web.github.io/webxr/#capable-of-supporting"},
+"https://immersive-web.github.io/webxr/#dom-xrframe-getpose": {"displayText":"getPose(space, baseSpace)","export":true,"for_":["XRFrame"],"level":"1","normative":true,"shortname":"webxr","spec":"webxr","status":"current","text":"getPose(space, baseSpace)","type":"method","url":"https://immersive-web.github.io/webxr/#dom-xrframe-getpose"},
+"https://immersive-web.github.io/webxr/#dom-xrframe-session": {"displayText":"session","export":true,"for_":["XRFrame"],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"session","type":"dfn","url":"https://immersive-web.github.io/webxr/#dom-xrframe-session"},
+"https://immersive-web.github.io/webxr/#dom-xrframe-session_https://immersive-web.github.io/webxr/#dom-xrframe-session": {"displayText":"session","export":true,"for_":["XRFrame"],"level":"1","normative":true,"shortname":"webxr","spec":"webxr","status":"current","text":"session","type":"attribute","url":"https://immersive-web.github.io/webxr/#dom-xrframe-session"},
+"https://immersive-web.github.io/webxr/#feature-descriptor": {"displayText":"feature descriptor","export":true,"for_":[],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"feature descriptor","type":"dfn","url":"https://immersive-web.github.io/webxr/#feature-descriptor"},
+"https://immersive-web.github.io/webxr/#inline-xr-device": {"displayText":"inline XR device","export":true,"for_":[],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"inline xr device","type":"dfn","url":"https://immersive-web.github.io/webxr/#inline-xr-device"},
+"https://immersive-web.github.io/webxr/#quantization": {"displayText":"quantization","export":true,"for_":[],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"quantization","type":"dfn","url":"https://immersive-web.github.io/webxr/#quantization"},
+"https://immersive-web.github.io/webxr/#rounding": {"displayText":"rounding","export":true,"for_":[],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"rounding","type":"dfn","url":"https://immersive-web.github.io/webxr/#rounding"},
+"https://immersive-web.github.io/webxr/#xrframe": {"displayText":"XRFrame","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr","spec":"webxr","status":"current","text":"XRFrame","type":"interface","url":"https://immersive-web.github.io/webxr/#xrframe"},
+"https://immersive-web.github.io/webxr/#xrframe-active": {"displayText":"active","export":true,"for_":["XRFrame"],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"active","type":"dfn","url":"https://immersive-web.github.io/webxr/#xrframe-active"},
+"https://immersive-web.github.io/webxr/#xrframe-time": {"displayText":"time","export":true,"for_":["XRFrame"],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"time","type":"dfn","url":"https://immersive-web.github.io/webxr/#xrframe-time"},
+"https://immersive-web.github.io/webxr/#xrsession": {"displayText":"XRSession","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr","spec":"webxr","status":"current","text":"XRSession","type":"interface","url":"https://immersive-web.github.io/webxr/#xrsession"},
+"https://immersive-web.github.io/webxr/#xrsession-list-of-frame-updates": {"displayText":"list of frame updates","export":true,"for_":["XRSession"],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"list of frame updates","type":"dfn","url":"https://immersive-web.github.io/webxr/#xrsession-list-of-frame-updates"},
+"https://immersive-web.github.io/webxr/#xrsession-xr-device": {"displayText":"XR device","export":true,"for_":["XRSession"],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"xr device","type":"dfn","url":"https://immersive-web.github.io/webxr/#xrsession-xr-device"},
+"https://immersive-web.github.io/webxr/#xrspace": {"displayText":"XRSpace","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr","spec":"webxr","status":"current","text":"XRSpace","type":"interface","url":"https://immersive-web.github.io/webxr/#xrspace"},
+"https://immersive-web.github.io/webxr/#xrspace-native-origin": {"displayText":"native origin","export":true,"for_":["XRSpace"],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"native origin","type":"dfn","url":"https://immersive-web.github.io/webxr/#xrspace-native-origin"},
+"https://immersive-web.github.io/webxr/#xrspace-session": {"displayText":"session","export":true,"for_":["XRSpace"],"level":"","normative":true,"shortname":"webxr device api - level 1","spec":"webxr device api - level 1","status":"anchor-block","text":"session","type":"dfn","url":"https://immersive-web.github.io/webxr/#xrspace-session"},
+"https://immersive-web.github.io/webxr/#xrsystem": {"displayText":"XRSystem","export":true,"for_":[],"level":"1","normative":true,"shortname":"webxr","spec":"webxr","status":"current","text":"XRSystem","type":"interface","url":"https://immersive-web.github.io/webxr/#xrsystem"},
+"https://w3c.github.io/hr-time/#dom-domhighrestimestamp": {"displayText":"DOMHighResTimeStamp","export":true,"for_":[],"level":"3","normative":true,"shortname":"hr-time","spec":"hr-time-3","status":"current","text":"DOMHighResTimeStamp","type":"typedef","url":"https://w3c.github.io/hr-time/#dom-domhighrestimestamp"},
+"https://webidl.spec.whatwg.org/#SameObject": {"displayText":"SameObject","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"SameObject","type":"extended-attribute","url":"https://webidl.spec.whatwg.org/#SameObject"},
+"https://webidl.spec.whatwg.org/#idl-DOMString": {"displayText":"DOMString","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"DOMString","type":"interface","url":"https://webidl.spec.whatwg.org/#idl-DOMString"},
+"https://webidl.spec.whatwg.org/#idl-frozen-array": {"displayText":"FrozenArray","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"FrozenArray","type":"interface","url":"https://webidl.spec.whatwg.org/#idl-frozen-array"},
+"https://webidl.spec.whatwg.org/#idl-promise": {"displayText":"Promise","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"Promise","type":"interface","url":"https://webidl.spec.whatwg.org/#idl-promise"},
+"https://webidl.spec.whatwg.org/#idl-undefined": {"displayText":"undefined","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"undefined","type":"interface","url":"https://webidl.spec.whatwg.org/#idl-undefined"},
+"https://webidl.spec.whatwg.org/#invalidstateerror": {"displayText":"InvalidStateError","export":true,"for_":[],"level":"1","normative":true,"shortname":"webidl","spec":"webidl","status":"current","text":"InvalidStateError","type":"exception","url":"https://webidl.spec.whatwg.org/#invalidstateerror"},
+};
+
+function mkRefHint(link, ref) {
+    const linkText = link.textContent;
+    let dfnTextElements = '';
+    if (ref.displayText.toLowerCase() != linkText.toLowerCase()) {
+        // Give the original term if it's being displayed in a different way.
+        // But allow casing differences, they're insignificant.
+        dfnTextElements =
+            mk.li({},
+                mk.b({}, "Term: "),
+                mk.span({}, ref.displayText)
+            );
+    }
+    const forList = ref.for_;
+    let forListElements;
+    if(forList.length == 0) {
+        forListElements = [];
+    } else if(forList.length == 1) {
+        forListElements = mk.li({},
+            mk.b({}, "For: "),
+            mk.span({}, forList[0]),
+        );
+    } else {
+        forListElements = mk.li({},
+            mk.b({}, "For: "),
+            mk.ul({},
+                ...forList.map(forItem =>
+                    mk.li({},
+                        mk.span({}, forItem)
+                    ),
+                ),
+            ),
+        );
+    }
+    const url = ref.url;
+    const safeUrl = encodeURIComponent(url);
+    const hintPanel = mk.aside({
+        class: "ref-hint",
+        id: `ref-hint-for-${safeUrl}`,
+        "data-for": url,
+        "aria-labelled-by": `ref-hint-for-${safeUrl}`,
+    },
+        mk.ul({},
+            dfnTextElements,
+            mk.li({},
+                mk.b({}, "URL: "),
+                mk.a({ href: url, class: "ref" }, url),
+            ),
+            mk.li({},
+                mk.b({}, "Type: "),
+                mk.span({}, `${ref.type}`),
+            ),
+            mk.li({},
+                mk.b({}, "Spec: "),
+                mk.span({}, `${ref.spec ? ref.spec : ''}`),
+            ),
+            forListElements
+        ),
+    );
+    hintPanel.forLink = link;
+    setupRefHintEventListeners(link, hintPanel);
+    return hintPanel;
+}
+
+function hideAllRefHints() {
+    queryAll(".ref-hint").forEach(el=>hideRefHint(el));
+}
+
+function hideRefHint(refHint) {
+    const link = refHint.forLink;
+    link.setAttribute("aria-expanded", "false");
+    if(refHint.teardownEventListeners) {
+        refHint.teardownEventListeners();
+    }
+    refHint.remove();
+}
+
+function showRefHint(link) {
+    if(link.classList.contains("dfn-link")) return;
+    const url = link.getAttribute("href");
+    const refHintKey = link.getAttribute("data-refhint-key");
+    let key = url;
+    if(refHintKey) {
+        key = refHintKey + "_" + url;
+    }
+    const ref = refsData[key];
+    if(!ref) return;
+
+    hideAllRefHints(); // Only display one at this time.
+
+    const refHint = mkRefHint(link, ref);
+    append(document.body, refHint);
+    link.setAttribute("aria-expanded", "true");
+    positionRefHint(refHint);
+}
+
+function setupRefHintEventListeners(link, refHint) {
+    if (refHint.teardownEventListeners) return;
+    // Add event handlers to hide the refHint after the user moves away
+    // from both the link and refHint, if not hovering either within one second.
+    let timeout = null;
+    const startHidingRefHint = (event) => {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(() => {
+            hideRefHint(refHint);
+        }, 1000);
+    }
+    const resetHidingRefHint = (event) => {
+        if (timeout) clearTimeout(timeout);
+        timeout = null;
+    };
+    link.addEventListener("mouseleave", startHidingRefHint);
+    link.addEventListener("mouseenter", resetHidingRefHint);
+    link.addEventListener("blur", startHidingRefHint);
+    link.addEventListener("focus", resetHidingRefHint);
+    refHint.addEventListener("mouseleave", startHidingRefHint);
+    refHint.addEventListener("mouseenter", resetHidingRefHint);
+    refHint.addEventListener("blur", startHidingRefHint);
+    refHint.addEventListener("focus", resetHidingRefHint);
+
+    refHint.teardownEventListeners = () => {
+        // remove event listeners
+        resetHidingRefHint();
+        link.removeEventListener("mouseleave", startHidingRefHint);
+        link.removeEventListener("mouseenter", resetHidingRefHint);
+        link.removeEventListener("blur", startHidingRefHint);
+        link.removeEventListener("focus", resetHidingRefHint);
+        refHint.removeEventListener("mouseleave", startHidingRefHint);
+        refHint.removeEventListener("mouseenter", resetHidingRefHint);
+        refHint.removeEventListener("blur", startHidingRefHint);
+        refHint.removeEventListener("focus", resetHidingRefHint);
+    };
+}
+
+function positionRefHint(refHint) {
+    const link = refHint.forLink;
+    const linkPos = getBounds(link);
+    refHint.style.top = linkPos.bottom + "px";
+    refHint.style.left = linkPos.left + "px";
+
+    const panelPos = refHint.getBoundingClientRect();
+    const panelMargin = 8;
+    const maxRight = document.body.parentNode.clientWidth - panelMargin;
+    if (panelPos.right > maxRight) {
+        const overflowAmount = panelPos.right - maxRight;
+        const newLeft = Math.max(panelMargin, linkPos.left - overflowAmount);
+        refHint.style.left = newLeft + "px";
+    }
+}
+
+// TODO: shared util
+// Returns the root-level absolute position {left and top} of element.
+function getBounds(el, relativeTo=document.body) {
+    const relativeRect = relativeTo.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const top = elRect.top - relativeRect.top;
+    const left = elRect.left - relativeRect.left;
+    return {
+        top,
+        left,
+        bottom: top + elRect.height,
+        right: left + elRect.width,
+    }
+}
+
+function showRefHintListener(e) {
+    // If the target isn't in a link (or is a link),
+    // just ignore it.
+    let link = e.target.closest("a");
+    if(!link) return;
+
+    // If the target is in a ref-hint panel
+    // (aka a link in the already-open one),
+    // also just ignore it.
+    if(link.closest(".ref-hint")) return;
+
+    // Otherwise, show the panel for the link.
+    showRefHint(link);
+}
+
+function hideAllHintsListener(e) {
+    // If the click is inside a ref-hint panel, ignore it.
+    if(e.target.closest(".ref-hint")) return;
+    // Otherwise, close all the current panels.
+    hideAllRefHints();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.body.addEventListener("mousedown", showRefHintListener);
+    document.body.addEventListener("focus", showRefHintListener);
+
+    document.body.addEventListener("click", hideAllHintsListener);
+});
+
+window.addEventListener("resize", () => {
+    // Hide any open ref hint.
+    hideAllRefHints();
+});
 }
 </script>
 <script>/* Boilerplate: script-var-click-highlighting */
+"use strict";
+{
 /*
 Color-choosing design:
 
-Colors are ordered by goodness.
-Each color has a usage count (initially zero).
-Each variable has a last-used color.
-
-* If the var has a last-used color, and that color's usage is 0,
-    return that color.
-* Otherwise, return the lowest-indexed color with the lowest usage.
-    Increment the color's usage and set it as the last-used color
-    for that var.
-* On unclicking, decrement usage of the color.
+* Colors are ordered by goodness.
+* On clicking a var, give it the earliest color
+    with the lowest usage in the algorithm.
+* On re-clicking, re-use the var's most recent color
+    if that's not currently being used elsewhere.
 */
-"use strict";
-{
-    document.addEventListener("click", e=>{
-        if(e.target.nodeName == "VAR") {
-            highlightSameAlgoVars(e.target);
-        }
-    });
-    const indexCounts = new Map();
-    const indexNames = new Map();
-    function highlightSameAlgoVars(v) {
-        // Find the algorithm container.
-        let algoContainer = null;
-        let searchEl = v;
-        while(algoContainer == null && searchEl != document.body) {
-            searchEl = searchEl.parentNode;
-            if(searchEl.hasAttribute("data-algorithm")) {
-                algoContainer = searchEl;
-            }
-        }
 
-        // Not highlighting document-global vars,
-        // too likely to be unrelated.
-        if(algoContainer == null) return;
+const COLOR_COUNT = 7;
 
-        const algoName = algoContainer.getAttribute("data-algorithm");
-        const varName = getVarName(v);
-        const addClass = !v.classList.contains("selected");
-        let highlightClass = null;
-        if(addClass) {
-            const index = chooseHighlightIndex(algoName, varName);
-            indexCounts.get(algoName)[index] += 1;
-            indexNames.set(algoName+"///"+varName, index);
-            highlightClass = nameFromIndex(index);
-        } else {
-            const index = previousHighlightIndex(algoName, varName);
-            indexCounts.get(algoName)[index] -= 1;
-            highlightClass = nameFromIndex(index);
-        }
+document.addEventListener("click", e=>{
+    if(e.target.nodeName == "VAR") {
+        highlightSameAlgoVars(e.target);
+    }
+});
 
-        // Find all same-name vars, and toggle their class appropriately.
+function highlightSameAlgoVars(v) {
+    // Find the algorithm container.
+    let algoContainer = findAlgoContainer(v);
+
+    // Not highlighting document-global vars,
+    // too likely to be unrelated.
+    if(algoContainer == null) return;
+
+    const varName = nameFromVar(v);
+    if(!v.hasAttribute("data-var-color")) {
+        const newColor = chooseHighlightColor(algoContainer, v);
         for(const el of algoContainer.querySelectorAll("var")) {
-            if(getVarName(el) == varName) {
-                el.classList.toggle("selected", addClass);
-                el.classList.toggle(highlightClass, addClass);
+            if(nameFromVar(el) == varName) {
+                el.setAttribute("data-var-color", newColor);
+                el.setAttribute("data-var-last-color", newColor);
+            }
+        }
+    } else {
+        for(const el of algoContainer.querySelectorAll("var")) {
+            if(nameFromVar(el) == varName) {
+                el.removeAttribute("data-var-color");
             }
         }
     }
-    function getVarName(el) {
-        return el.textContent.replace(/(\s|\xa0)+/, " ").trim();
+}
+function findAlgoContainer(el) {
+    while(el != document.body) {
+        if(el.hasAttribute("data-algorithm")) return el;
+        el = el.parentNode;
     }
-    function chooseHighlightIndex(algoName, varName) {
-        let indexes = null;
-        if(indexCounts.has(algoName)) {
-            indexes = indexCounts.get(algoName);
-        } else {
-            // 7 classes right now
-            indexes = [0,0,0,0,0,0,0];
-            indexCounts.set(algoName, indexes);
-        }
+    return null;
+}
+function nameFromVar(el) {
+    return el.textContent.replace(/(\s|\xa0)+/g, " ").trim();
+}
+function colorCountsFromContainer(container) {
+    const namesFromColor = Array.from({length:COLOR_COUNT}, x=>new Set());
+    for(let v of container.querySelectorAll("var[data-var-color]")) {
+        let color = +v.getAttribute("data-var-color");
+        namesFromColor[color].add(nameFromVar(v));
+    }
 
-        // If the element was recently unclicked,
-        // *and* that color is still unclaimed,
-        // give it back the same color.
-        const lastIndex = previousHighlightIndex(algoName, varName);
-        if(indexes[lastIndex] === 0) return lastIndex;
-
-        // Find the earliest index with the lowest count.
-        const minCount = Math.min.apply(null, indexes);
-        let index = null;
-        for(var i = 0; i < indexes.length; i++) {
-            if(indexes[i] == minCount) {
-                return i;
-            }
+    return namesFromColor.map(x=>x.size);
+}
+function leastUsedColor(colors) {
+    // Find the earliest color with the lowest count.
+    let minCount = Infinity;
+    let minColor = null;
+    for(var i = 0; i < colors.length; i++) {
+        if(colors[i] < minCount) {
+            minColor = i;
+            minCount = colors[i];
         }
     }
-    function previousHighlightIndex(algoName, varName) {
-        return indexNames.get(algoName+"///"+varName);
+    return minColor;
+}
+function chooseHighlightColor(container, v) {
+    const colorCounts = colorCountsFromContainer(container);
+    if(v.hasAttribute("data-var-last-color")) {
+        let color = +v.getAttribute("data-var-last-color");
+        if(colorCounts[color] == 0) return color;
     }
-    function nameFromIndex(index) {
-        return "selected" + index;
-    }
+    return leastUsedColor(colorCounts);
+}
 }
 </script>
