@@ -1,5 +1,5 @@
 # Real World Geometry
-Feature lead: Piotr Bialecki (@bialpo)
+Feature lead: Alex Cooper (@alcooper91)
 
 Status: Incubation
 
